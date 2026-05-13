@@ -42,6 +42,10 @@ let package = Package(
             name: "Version Primitives",
             targets: ["Version Primitives"]
         ),
+        .library(
+            name: "Version Primitives Standard Library Integration",
+            targets: ["Version Primitives Standard Library Integration"]
+        ),
     ],
     dependencies: [
         .package(path: "../swift-ascii-primitives"),
@@ -67,6 +71,12 @@ let package = Package(
                 .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
                 .product(name: "Text Primitives", package: "swift-text-primitives"),
                 .product(name: "Time Primitives Core", package: "swift-time-primitives"),
+            ]
+        ),
+        .target(
+            name: "Version Primitives Standard Library Integration",
+            dependencies: [
+                "Version Primitives",
             ]
         ),
         .testTarget(
