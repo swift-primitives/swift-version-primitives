@@ -14,17 +14,17 @@ public import Version_Primitives
 extension Version.Semantic: ExpressibleByStringLiteral {
     /// Constructs a `Version.Semantic` from a string literal.
     ///
-    /// Parses the literal eagerly via `Version.Semantic(parsing:)`. A
+    /// Parses the literal eagerly via `Version.Semantic(_:)`. A
     /// malformed literal traps with `fatalError` — literals authored at
     /// the call site are reviewable surface text, so a parse failure
     /// indicates an authoring-time defect that surfaces at build-load
     /// time rather than at the first comparison call. Use the throwing
-    /// `init(parsing:)` directly for versions whose validity cannot be
+    /// `init(_:)` directly for versions whose validity cannot be
     /// guaranteed at compile time.
     @inlinable
     public init(stringLiteral value: Swift.String) {
         do {
-            self = try Version.Semantic(parsing: value)
+            self = try Version.Semantic(value)
         } catch {
             fatalError("Version.Semantic literal failed to parse: \(value): \(error)")
         }

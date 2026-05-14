@@ -18,7 +18,7 @@ struct VersionSemanticErrorPositionTests {
     @Test
     func `Leading zero in MAJOR reports the digit-run range`() {
         do {
-            _ = try Version.Semantic(parsing: "01.0.0")
+            _ = try Version.Semantic("01.0.0")
             Issue.record("expected throw")
         } catch let error as Version.Semantic.Error {
             #expect(error.range.start.underlying.rawValue == 0)
@@ -31,7 +31,7 @@ struct VersionSemanticErrorPositionTests {
     @Test
     func `Two-component core reports range at end of input`() {
         do {
-            _ = try Version.Semantic(parsing: "1.2")
+            _ = try Version.Semantic("1.2")
             Issue.record("expected throw")
         } catch let error as Version.Semantic.Error {
             #expect(error.range.start.underlying.rawValue == 3)
@@ -45,7 +45,7 @@ struct VersionSemanticErrorPositionTests {
         // The Greek letter alpha (α) is 2 UTF-8 bytes starting at
         // byte offset 6 in "1.0.0-α".
         do {
-            _ = try Version.Semantic(parsing: "1.0.0-α")
+            _ = try Version.Semantic("1.0.0-α")
             Issue.record("expected throw")
         } catch let error as Version.Semantic.Error {
             #expect(error.range.start.underlying.rawValue == 6)
@@ -58,7 +58,7 @@ struct VersionSemanticErrorPositionTests {
     @Test
     func `Trailing bytes report range after consumed prefix`() {
         do {
-            _ = try Version.Semantic(parsing: "1.2.3.4")
+            _ = try Version.Semantic("1.2.3.4")
             Issue.record("expected throw")
         } catch let error as Version.Semantic.Error {
             // Parser consumes "1.2.3" (5 bytes). Trailing ".4"
@@ -73,7 +73,7 @@ struct VersionSemanticErrorPositionTests {
     @Test
     func `Empty pre-release reports the dash-following position`() {
         do {
-            _ = try Version.Semantic(parsing: "1.0.0-")
+            _ = try Version.Semantic("1.0.0-")
             Issue.record("expected throw")
         } catch let error as Version.Semantic.Error {
             // Pre-release segment starts after the '-' at offset 6.

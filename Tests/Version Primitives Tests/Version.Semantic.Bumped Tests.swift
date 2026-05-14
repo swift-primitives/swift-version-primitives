@@ -43,7 +43,7 @@ struct VersionSemanticBumpedTests {
 
     @Test
     func `Bumping drops pre-release and build metadata`() throws(Version.Semantic.Error) {
-        let v = try Version.Semantic(parsing: "1.2.3-rc.1+build.42")
+        let v = try Version.Semantic("1.2.3-rc.1+build.42")
         let bumped = v.bumped.patch
         #expect(bumped.preReleaseIdentifiers.isEmpty)
         #expect(bumped.buildMetadataIdentifiers.isEmpty)

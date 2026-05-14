@@ -28,7 +28,7 @@
             let container = try decoder.singleValueContainer()
             let string = try container.decode(Swift.String.self)
             do {
-                self = try Version.Semantic(parsing: string)
+                self = try Version.Semantic(string)
             } catch let error as Version.Semantic.Error {
                 throw DecodingError.dataCorruptedError(
                     in: container,

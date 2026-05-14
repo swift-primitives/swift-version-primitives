@@ -26,7 +26,7 @@ struct VersionSemanticTests {
 extension VersionSemanticTests.Construction {
     @Test
     func `Parses bare MAJOR.MINOR.PATCH`() throws(Version.Semantic.Error) {
-        let v = try Version.Semantic(parsing: "1.2.3")
+        let v = try Version.Semantic("1.2.3")
         #expect(v.major == 1)
         #expect(v.minor == 2)
         #expect(v.patch == 3)
@@ -36,7 +36,7 @@ extension VersionSemanticTests.Construction {
 
     @Test
     func `Parses with prerelease identifiers`() throws(Version.Semantic.Error) {
-        let v = try Version.Semantic(parsing: "1.0.0-alpha.1")
+        let v = try Version.Semantic("1.0.0-alpha.1")
         #expect(v.major == 1)
         #expect(v.minor == 0)
         #expect(v.patch == 0)
@@ -46,13 +46,13 @@ extension VersionSemanticTests.Construction {
 
     @Test
     func `Parses with build metadata`() throws(Version.Semantic.Error) {
-        let v = try Version.Semantic(parsing: "1.0.0+sha.abc123")
+        let v = try Version.Semantic("1.0.0+sha.abc123")
         #expect(v.buildMetadataIdentifiers == ["sha", "abc123"])
     }
 
     @Test
     func `Parses with both prerelease and build metadata`() throws(Version.Semantic.Error) {
-        let v = try Version.Semantic(parsing: "1.2.3-rc.1+build.456")
+        let v = try Version.Semantic("1.2.3-rc.1+build.456")
         #expect(v.major == 1)
         #expect(v.preReleaseIdentifiers == [.alphanumeric("rc"), .numeric(1)])
         #expect(v.buildMetadataIdentifiers == ["build", "456"])
@@ -79,29 +79,29 @@ extension VersionSemanticTests.Construction {
 extension VersionSemanticTests.Equality {
     @Test
     func `Identical versions compare equal`() throws(Version.Semantic.Error) {
-        let a = try Version.Semantic(parsing: "1.2.3")
-        let b = try Version.Semantic(parsing: "1.2.3")
+        let a = try Version.Semantic("1.2.3")
+        let b = try Version.Semantic("1.2.3")
         #expect(a == b)
     }
 
     @Test
     func `Build metadata is excluded from equality (SemVer §10)`() throws(Version.Semantic.Error) {
-        let a = try Version.Semantic(parsing: "1.0.0+a")
-        let b = try Version.Semantic(parsing: "1.0.0+b")
+        let a = try Version.Semantic("1.0.0+a")
+        let b = try Version.Semantic("1.0.0+b")
         #expect(a == b)
     }
 
     @Test
     func `Prerelease identifiers participate in equality`() throws(Version.Semantic.Error) {
-        let a = try Version.Semantic(parsing: "1.0.0-alpha")
-        let b = try Version.Semantic(parsing: "1.0.0-beta")
+        let a = try Version.Semantic("1.0.0-alpha")
+        let b = try Version.Semantic("1.0.0-beta")
         #expect(a != b)
     }
 
     @Test
     func `Build metadata is excluded from hash (SemVer §10)`() throws(Version.Semantic.Error) {
-        let a = try Version.Semantic(parsing: "1.0.0+a")
-        let b = try Version.Semantic(parsing: "1.0.0+b")
+        let a = try Version.Semantic("1.0.0+a")
+        let b = try Version.Semantic("1.0.0+b")
         #expect(a.hashValue == b.hashValue)
     }
 }
@@ -111,36 +111,36 @@ extension VersionSemanticTests.Equality {
 extension VersionSemanticTests.Precedence {
     @Test
     func `Major version dominates ordering`() throws(Version.Semantic.Error) {
-        let a = try Version.Semantic(parsing: "1.99.99")
-        let b = try Version.Semantic(parsing: "2.0.0")
+        let a = try Version.Semantic("1.99.99")
+        let b = try Version.Semantic("2.0.0")
         #expect(a < b)
     }
 
     @Test
     func `Prerelease has lower precedence than release (SemVer §11.3)`() throws(Version.Semantic.Error) {
-        let pre = try Version.Semantic(parsing: "1.0.0-alpha")
-        let rel = try Version.Semantic(parsing: "1.0.0")
+        let pre = try Version.Semantic("1.0.0-alpha")
+        let rel = try Version.Semantic("1.0.0")
         #expect(pre < rel)
     }
 
     @Test
     func `Numeric prerelease has lower precedence than alphanumeric (SemVer §11.4)`() throws(Version.Semantic.Error) {
-        let num = try Version.Semantic(parsing: "1.0.0-1")
-        let alpha = try Version.Semantic(parsing: "1.0.0-alpha")
+        let num = try Version.Semantic("1.0.0-1")
+        let alpha = try Version.Semantic("1.0.0-alpha")
         #expect(num < alpha)
     }
 
     @Test
     func `Shorter prerelease wins on common prefix (SemVer §11.4)`() throws(Version.Semantic.Error) {
-        let short = try Version.Semantic(parsing: "1.0.0-alpha")
-        let long = try Version.Semantic(parsing: "1.0.0-alpha.1")
+        let short = try Version.Semantic("1.0.0-alpha")
+        let long = try Version.Semantic("1.0.0-alpha.1")
         #expect(short < long)
     }
 
     @Test
     func `Numeric prerelease compares numerically not lexically`() throws(Version.Semantic.Error) {
-        let v9 = try Version.Semantic(parsing: "1.0.0-9")
-        let v10 = try Version.Semantic(parsing: "1.0.0-10")
+        let v9 = try Version.Semantic("1.0.0-9")
+        let v10 = try Version.Semantic("1.0.0-10")
         #expect(v9 < v10)
     }
 
@@ -158,7 +158,7 @@ extension VersionSemanticTests.Precedence {
             "1.0.0-beta.11",
             "1.0.0-rc.1",
             "1.0.0",
-        ].map(Version.Semantic.init(parsing:))
+        ].map(Version.Semantic.init(_:))
         for index in versions.indices.dropLast() {
             #expect(versions[index] < versions[index + 1])
         }
@@ -170,25 +170,25 @@ extension VersionSemanticTests.Precedence {
 extension VersionSemanticTests.Description {
     @Test
     func `Bare version round-trips`() throws(Version.Semantic.Error) {
-        let v = try Version.Semantic(parsing: "1.2.3")
+        let v = try Version.Semantic("1.2.3")
         #expect(v.description == "1.2.3")
     }
 
     @Test
     func `Prerelease round-trips`() throws(Version.Semantic.Error) {
-        let v = try Version.Semantic(parsing: "1.0.0-alpha.1")
+        let v = try Version.Semantic("1.0.0-alpha.1")
         #expect(v.description == "1.0.0-alpha.1")
     }
 
     @Test
     func `Build metadata round-trips`() throws(Version.Semantic.Error) {
-        let v = try Version.Semantic(parsing: "1.0.0+sha.abc")
+        let v = try Version.Semantic("1.0.0+sha.abc")
         #expect(v.description == "1.0.0+sha.abc")
     }
 
     @Test
     func `Full round-trips`() throws(Version.Semantic.Error) {
-        let v = try Version.Semantic(parsing: "1.2.3-rc.1+build.456")
+        let v = try Version.Semantic("1.2.3-rc.1+build.456")
         #expect(v.description == "1.2.3-rc.1+build.456")
     }
 }
@@ -199,56 +199,56 @@ extension VersionSemanticTests.ErrorCases {
     @Test
     func `Two-component core rejected`() {
         #expect(throws: Version.Semantic.Error.self) {
-            try Version.Semantic(parsing: "1.2")
+            try Version.Semantic("1.2")
         }
     }
 
     @Test
     func `Four-component core rejected`() {
         #expect(throws: Version.Semantic.Error.self) {
-            try Version.Semantic(parsing: "1.2.3.4")
+            try Version.Semantic("1.2.3.4")
         }
     }
 
     @Test
     func `Leading zero in MAJOR rejected`() {
         #expect(throws: Version.Semantic.Error.self) {
-            try Version.Semantic(parsing: "01.0.0")
+            try Version.Semantic("01.0.0")
         }
     }
 
     @Test
     func `Non-numeric MAJOR rejected`() {
         #expect(throws: Version.Semantic.Error.self) {
-            try Version.Semantic(parsing: "a.0.0")
+            try Version.Semantic("a.0.0")
         }
     }
 
     @Test
     func `Empty prerelease identifier rejected`() {
         #expect(throws: Version.Semantic.Error.self) {
-            try Version.Semantic(parsing: "1.0.0-")
+            try Version.Semantic("1.0.0-")
         }
     }
 
     @Test
     func `Leading zero in numeric prerelease rejected`() {
         #expect(throws: Version.Semantic.Error.self) {
-            try Version.Semantic(parsing: "1.0.0-01")
+            try Version.Semantic("1.0.0-01")
         }
     }
 
     @Test
     func `Non-ASCII rejected`() {
         #expect(throws: Version.Semantic.Error.self) {
-            try Version.Semantic(parsing: "1.0.0-α")
+            try Version.Semantic("1.0.0-α")
         }
     }
 
     @Test
     func `Empty build metadata identifier rejected`() {
         #expect(throws: Version.Semantic.Error.self) {
-            try Version.Semantic(parsing: "1.0.0+")
+            try Version.Semantic("1.0.0+")
         }
     }
 }

@@ -28,7 +28,7 @@ struct VersionSemanticPhaseTests {
 
     @Test
     func `Pre-release zero-major stays initial`() throws(Version.Semantic.Error) {
-        let v = try Version.Semantic(parsing: "0.9.0-rc.1")
+        let v = try Version.Semantic("0.9.0-rc.1")
         #expect(v.phase == .initial)
     }
 

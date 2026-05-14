@@ -26,7 +26,7 @@ struct VersionSemanticSerializerTests {
 
     @Test
     func `Serializes with prerelease and build metadata`() throws(Version.Semantic.Error) {
-        let version = try Version.Semantic(parsing: "1.2.3-alpha.1+sha.abc123")
+        let version = try Version.Semantic("1.2.3-alpha.1+sha.abc123")
         var buffer: [Swift.UInt8] = []
         Version.Semantic.Serializer().serialize(version, into: &buffer)
         #expect(Swift.String(decoding: buffer, as: Swift.UTF8.self) == "1.2.3-alpha.1+sha.abc123")
@@ -47,7 +47,7 @@ struct VersionSemanticSerializerTests {
             "10.20.30",
         ]
         for input in inputs {
-            let parsed = try Version.Semantic(parsing: input)
+            let parsed = try Version.Semantic(input)
             var buffer: [Swift.UInt8] = []
             Version.Semantic.Serializer().serialize(parsed, into: &buffer)
             let roundTripped = Swift.String(decoding: buffer, as: Swift.UTF8.self)
@@ -57,7 +57,7 @@ struct VersionSemanticSerializerTests {
 
     @Test
     func `Serializer output matches description`() throws(Version.Semantic.Error) {
-        let version = try Version.Semantic(parsing: "2.0.0-rc.1+build.99")
+        let version = try Version.Semantic("2.0.0-rc.1+build.99")
         var buffer: [Swift.UInt8] = []
         Version.Semantic.Serializer().serialize(version, into: &buffer)
         #expect(Swift.String(decoding: buffer, as: Swift.UTF8.self) == version.description)
