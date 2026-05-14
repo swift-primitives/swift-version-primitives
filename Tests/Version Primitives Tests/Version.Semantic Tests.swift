@@ -67,9 +67,10 @@ extension VersionSemanticTests.Construction {
     }
 
     @Test
-    func `LosslessStringConvertible init returns nil on invalid input`() {
-        let v: Version.Semantic? = .init("not a version")
-        #expect(v == nil)
+    func `bare positional throwing init rejects invalid input`() {
+        #expect(throws: Version.Semantic.Error.self) {
+            try Version.Semantic("not a version")
+        }
     }
 }
 

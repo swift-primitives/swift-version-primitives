@@ -40,7 +40,7 @@ extension Version {
     /// Equality and comparison follow §11 precedence (build
     /// metadata is excluded per §10 — two versions differing only
     /// in build metadata compare equal and have the same hash).
-    public struct Semantic: Swift.Sendable, Swift.Hashable, Swift.Comparable, Swift.CustomStringConvertible, Swift.LosslessStringConvertible {
+    public struct Semantic: Swift.Sendable, Swift.Hashable, Swift.Comparable, Swift.CustomStringConvertible {
         /// The MAJOR version component.
         ///
         /// Typed as ``Version/Semantic/Major/Value`` (a phantom-tagged
@@ -159,16 +159,6 @@ extension Version {
                 count += 1
             }
             return count
-        }
-
-        /// `LosslessStringConvertible` conformance — failable
-        /// shim around ``Version/Semantic/init(parsing:)``.
-        public init?(_ description: Swift.String) {
-            do {
-                self = try .init(parsing: description)
-            } catch {
-                return nil
-            }
         }
 
         /// Canonical SemVer 2.0.0 spelling: `MAJOR.MINOR.PATCH`,
