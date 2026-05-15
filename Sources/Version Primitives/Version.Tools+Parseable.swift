@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import Array_Dynamic_Primitives
+public import Byte_Parser_Primitives
 public import Parser_Primitives
 
 extension Version.Tools: Parseable {
@@ -36,13 +37,13 @@ extension Version.Tools: Parseable {
     /// `swift-institute/Experiments/parseable-associatedtype-implements/`
     /// (2026-05-14).
     @_implements(Parseable, Parser)
-    public typealias _ParseableParser = Version_Primitives.Version.Tools.Parser<Parser_Primitives_Core.Parser.Input.Bytes>
+    public typealias _ParseableParser = Version_Primitives.Version.Tools.Parser<Byte.Input>
 
     /// The canonical SE-0152 tools-version byte-stream parser instance.
     ///
     /// Conforming to ``Parseable`` from `swift-parser-primitives`
     /// declares ``Version/Tools/Parser`` (instantiated over
-    /// `Parser_Primitives_Core.Parser.Input.Bytes`) as the type's
+    /// `Byte.Input`) as the type's
     /// canonical parser, which enables generic parser-discovery
     /// algorithms over `Parseable` types AND surfaces the free
     /// `init(ascii:)` initializer from `Parseable`'s byte-input

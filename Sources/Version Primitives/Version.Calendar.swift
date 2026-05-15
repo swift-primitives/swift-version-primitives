@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 internal import Ordinal_Primitives
+public import Byte_Parser_Primitives
 public import Parser_Primitives
 public import Tagged_Primitives
 public import Text_Primitives
@@ -73,7 +74,7 @@ extension Version {
                     range: Text.Range(start: position, end: Self.position(Swift.UInt(offset) + 1))
                 )
             }
-            var input = Parser_Primitives.Parser.Input.Bytes(utf8: calverString)
+            var input = Byte.Input(utf8: calverString)
             self = try Version.Calendar.Parser().parse(&input)
             if !input.isEmpty {
                 let remaining = Swift.UInt(input.count)

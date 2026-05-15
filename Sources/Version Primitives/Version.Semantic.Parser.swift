@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import ASCII_Decimal_Parser_Primitives
+public import Byte_Parser_Primitives
 public import ASCII_Primitives
 public import Collection_Primitives
 internal import Ordinal_Primitives
@@ -38,7 +39,7 @@ extension Version.Semantic {
     /// supplied string and asserts the input is exhausted.
     ///
     /// ```swift
-    /// var input = Parser.Input.Bytes(utf8: "1.2.3-alpha+sha.abc")
+    /// var input = Byte.Input(utf8: "1.2.3-alpha+sha.abc")
     /// let version = try Version.Semantic.Parser().parse(&input)
     /// // version.major.underlying == 1
     /// ```

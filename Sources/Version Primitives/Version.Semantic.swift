@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 internal import Ordinal_Primitives
+public import Byte_Parser_Primitives
 internal import Parser_Primitives
 public import Tagged_Primitives
 public import Text_Primitives
@@ -120,7 +121,7 @@ extension Version {
                     )
                 )
             }
-            var input = Parser_Primitives.Parser.Input.Bytes(utf8: versionString)
+            var input = Byte.Input(utf8: versionString)
             self = try Version.Semantic.Parser().parse(&input)
             if !input.isEmpty {
                 let remaining = Swift.UInt(input.count)
