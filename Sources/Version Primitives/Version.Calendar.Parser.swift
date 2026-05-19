@@ -11,6 +11,8 @@
 
 public import ASCII_Decimal_Parser_Primitives
 public import ASCII_Primitives
+public import Byte_Primitives
+internal import Byte_Primitives_Standard_Library_Integration
 public import Collection_Primitives
 internal import Ordinal_Primitives
 public import Parser_Primitives
@@ -25,7 +27,7 @@ extension Version.Calendar {
     /// (yearOnly, yearMonth, full) by the number of dot-separated
     /// numeric components consumed before any modifier.
     public struct Parser<Input: Collection.Slice.`Protocol` & Swift.Collection>: Swift.Sendable
-    where Input: Swift.Sendable, Input.Element == Swift.UInt8 {
+    where Input: Swift.Sendable, Input.Element == Byte {
         /// Creates a CalVer byte-stream parser.
         ///
         /// Stateless — instances are interchangeable.
@@ -112,8 +114,8 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
     }
 
     @inlinable
-    static func isCalendarByte(_ byte: Swift.UInt8) -> Swift.Bool {
-        ASCII.Classification.isAlphanumeric(byte) || byte == 0x2E || byte == 0x2D
+    static func isCalendarByte(_ byte: Byte) -> Swift.Bool {
+        ASCII.Classification.isAlphanumeric(byte.underlying) || byte == 0x2E || byte == 0x2D
     }
 
     @inlinable
@@ -133,7 +135,7 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
         in originalString: Swift.String
     ) throws(Version.Calendar.Error) -> Swift.UInt {
         let startOffset = offset
-        guard let firstByte = input.first, ASCII.Classification.isDigit(firstByte) else {
+        guard let firstByte = input.first, ASCII.Classification.isDigit(firstByte.underlying) else {
             throw .invalidCalendarIdentifier(
                 input: originalString,
                 identifier: "",
@@ -191,7 +193,7 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
     }
 
     @inlinable
-    static func isModifierByte(_ byte: Swift.UInt8) -> Swift.Bool {
-        ASCII.Classification.isAlphanumeric(byte) || byte == 0x2D
+    static func isModifierByte(_ byte: Byte) -> Swift.Bool {
+        ASCII.Classification.isAlphanumeric(byte.underlying) || byte == 0x2D
     }
 }

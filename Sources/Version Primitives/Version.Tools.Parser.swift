@@ -11,6 +11,8 @@
 
 public import ASCII_Decimal_Parser_Primitives
 public import ASCII_Primitives
+public import Byte_Primitives
+internal import Byte_Primitives_Standard_Library_Integration
 public import Collection_Primitives
 internal import Ordinal_Primitives
 public import Parser_Primitives
@@ -24,7 +26,7 @@ extension Version.Tools {
     /// (typically a Package.swift `// swift-tools-version: 6.3`
     /// comment scanner).
     public struct Parser<Input: Collection.Slice.`Protocol` & Swift.Collection>: Swift.Sendable
-    where Input: Swift.Sendable, Input.Element == Swift.UInt8 {
+    where Input: Swift.Sendable, Input.Element == Byte {
         /// Creates a tools-version byte-stream parser.
         @inlinable
         public init() {}
@@ -72,8 +74,8 @@ extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
     }
 
     @inlinable
-    static func isToolsVersionByte(_ byte: Swift.UInt8) -> Swift.Bool {
-        ASCII.Classification.isDigit(byte) || byte == 0x2E
+    static func isToolsVersionByte(_ byte: Byte) -> Swift.Bool {
+        ASCII.Classification.isDigit(byte.underlying) || byte == 0x2E
     }
 
     @inlinable
@@ -93,7 +95,7 @@ extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
         in originalString: Swift.String
     ) throws(Version.Tools.Error) -> Swift.UInt {
         let startOffset = offset
-        guard let firstByte = input.first, ASCII.Classification.isDigit(firstByte) else {
+        guard let firstByte = input.first, ASCII.Classification.isDigit(firstByte.underlying) else {
             throw .invalidToolsVersionIdentifier(
                 input: originalString,
                 identifier: "",
@@ -102,10 +104,10 @@ extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
         }
         if firstByte == 0x30 {
             let nextIdx = input.index(after: input.startIndex)
-            if nextIdx < input.endIndex, ASCII.Classification.isDigit(input[nextIdx]) {
+            if nextIdx < input.endIndex, ASCII.Classification.isDigit(input[nextIdx].underlying) {
                 var i = input.startIndex
                 var consumed: Swift.UInt = 0
-                while i < input.endIndex, ASCII.Classification.isDigit(input[i]) {
+                while i < input.endIndex, ASCII.Classification.isDigit(input[i].underlying) {
                     i = input.index(after: i)
                     consumed += 1
                 }

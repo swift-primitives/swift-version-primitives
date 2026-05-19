@@ -50,6 +50,7 @@ let package = Package(
     dependencies: [
         .package(path: "../swift-ascii-primitives"),
         .package(path: "../swift-ascii-parser-primitives"),
+        .package(path: "../swift-byte-primitives"),
         .package(path: "../swift-byte-parser-primitives"),
         .package(path: "../swift-carrier-primitives"),
         .package(path: "../swift-ordinal-primitives"),
@@ -65,6 +66,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ASCII Primitives", package: "swift-ascii-primitives"),
                 .product(name: "ASCII Decimal Parser Primitives", package: "swift-ascii-parser-primitives"),
+                .product(name: "Byte Primitives Standard Library Integration", package: "swift-byte-primitives"),
                 .product(name: "Byte Parser Primitives", package: "swift-byte-parser-primitives"),
                 .product(name: "Carrier Primitives", package: "swift-carrier-primitives"),
                 .product(name: "Ordinal Primitives", package: "swift-ordinal-primitives"),

@@ -11,6 +11,7 @@
 
 public import ASCII_Decimal_Parser_Primitives
 public import Byte_Parser_Primitives
+internal import Byte_Primitives_Standard_Library_Integration
 public import ASCII_Primitives
 public import Collection_Primitives
 internal import Ordinal_Primitives
@@ -44,7 +45,7 @@ extension Version.Semantic {
     /// // version.major.underlying == 1
     /// ```
     public struct Parser<Input: Collection.Slice.`Protocol` & Swift.Collection>: Swift.Sendable
-    where Input: Swift.Sendable, Input.Element == Swift.UInt8 {
+    where Input: Swift.Sendable, Input.Element == Byte {
         /// Creates a SemVer 2.0.0 byte-stream parser.
         ///
         /// Stateless — instances are interchangeable.
@@ -116,8 +117,8 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
     }
 
     @inlinable
-    static func isSemVerByte(_ byte: Swift.UInt8) -> Swift.Bool {
-        ASCII.Classification.isAlphanumeric(byte) || byte == 0x2E || byte == 0x2D || byte == 0x2B
+    static func isSemVerByte(_ byte: Byte) -> Swift.Bool {
+        ASCII.Classification.isAlphanumeric(byte.underlying) || byte == 0x2E || byte == 0x2D || byte == 0x2B
     }
 
     @inlinable
@@ -138,7 +139,7 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
         in originalString: Swift.String
     ) throws(Version.Semantic.Error) -> Swift.UInt {
         let startOffset = offset
-        guard let firstByte = input.first, ASCII.Classification.isDigit(firstByte) else {
+        guard let firstByte = input.first, ASCII.Classification.isDigit(firstByte.underlying) else {
             throw .invalidVersionCoreIdentifier(
                 input: originalString,
                 identifier: "",
@@ -147,10 +148,10 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
         }
         if firstByte == 0x30 {
             let nextIdx = input.index(after: input.startIndex)
-            if nextIdx < input.endIndex, ASCII.Classification.isDigit(input[nextIdx]) {
+            if nextIdx < input.endIndex, ASCII.Classification.isDigit(input[nextIdx].underlying) {
                 var i = input.startIndex
                 var consumed: Swift.UInt = 0
-                while i < input.endIndex, ASCII.Classification.isDigit(input[i]) {
+                while i < input.endIndex, ASCII.Classification.isDigit(input[i].underlying) {
                     i = input.index(after: i)
                     consumed += 1
                 }
@@ -183,7 +184,7 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
     // core's three-identifier structure is violated.
     @usableFromInline
     static func consumeDelimiter(
-        _ byte: Swift.UInt8,
+        _ byte: Byte,
         in input: inout Input,
         offset: inout Swift.UInt,
         original originalString: Swift.String
@@ -240,7 +241,7 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
                     range: range
                 )
             }
-            let allDigits = identifierSlice.allSatisfy { ASCII.Classification.isDigit($0) }
+            let allDigits = identifierSlice.allSatisfy { ASCII.Classification.isDigit($0.underlying) }
             if allDigits {
                 if identifierSlice.count > 1 && identifierSlice.first == 0x30 {
                     throw .leadingZeroInNumericPreReleaseIdentifier(
@@ -318,8 +319,8 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
     }
 
     @inlinable
-    static func isIdentifierByte(_ byte: Swift.UInt8) -> Swift.Bool {
-        ASCII.Classification.isAlphanumeric(byte) || byte == 0x2D
+    static func isIdentifierByte(_ byte: Byte) -> Swift.Bool {
+        ASCII.Classification.isAlphanumeric(byte.underlying) || byte == 0x2D
     }
 
     // Advances past a leading '.' if present. Chains dot-separated
