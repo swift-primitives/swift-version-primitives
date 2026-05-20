@@ -23,7 +23,7 @@ extension Version.Semantic {
     /// symmetry: `parse(serialize(v)) == v` for any valid `v`.
     ///
     /// ```swift
-    /// var buffer: [Swift.UInt8] = []
+    /// var buffer: [Byte] = []
     /// Version.Semantic.Serializer().serialize(version, into: &buffer)
     /// // buffer holds the UTF-8 of "1.2.3-alpha.1+sha.abc"
     /// ```
@@ -33,7 +33,7 @@ extension Version.Semantic {
     /// construction, so every byte written satisfies the spec
     /// character class.
     public struct Serializer<Buffer: Swift.RangeReplaceableCollection>: Swift.Sendable
-    where Buffer: Swift.Sendable, Buffer.Element == Swift.UInt8 {
+    where Buffer: Swift.Sendable, Buffer.Element == Byte {
         /// Creates a SemVer 2.0.0 byte-stream serializer.
         ///
         /// Stateless — instances are interchangeable.
@@ -76,7 +76,7 @@ extension Version.Semantic.Serializer: Serializer_Primitives.Serializer.`Protoco
                     ASCII.Serialization.serializeDecimal(value, into: &buffer)
 
                 case .alphanumeric(let text):
-                    buffer.append(contentsOf: text.utf8)
+                    buffer.append(contentsOf: text.utf8.lazy.map(Byte.init))
                 }
             }
         }
@@ -87,7 +87,7 @@ extension Version.Semantic.Serializer: Serializer_Primitives.Serializer.`Protoco
                 if index > 0 {
                     buffer.append(0x2E)
                 }
-                buffer.append(contentsOf: identifier.utf8)
+                buffer.append(contentsOf: identifier.utf8.lazy.map(Byte.init))
             }
         }
     }

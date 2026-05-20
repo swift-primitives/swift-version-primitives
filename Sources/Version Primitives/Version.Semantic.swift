@@ -172,8 +172,8 @@ extension Version {
         /// source-of-truth formatting symmetric with the byte-stream
         /// parser.
         public var description: Swift.String {
-            var buffer: [Swift.UInt8] = []
-            Version.Semantic.Serializer<[Swift.UInt8]>().serialize(self, into: &buffer)
+            var buffer: [Byte] = []
+            Version.Semantic.Serializer<[Byte]>().serialize(self, into: &buffer)
             return Swift.String(decoding: buffer, as: Swift.UTF8.self)
         }
 

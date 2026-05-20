@@ -21,7 +21,7 @@ extension Version.Calendar {
     /// `YYYY.MM.MICRO`. The modifier, if present, is appended with
     /// a leading `-`.
     public struct Serializer<Buffer: Swift.RangeReplaceableCollection>: Swift.Sendable
-    where Buffer: Swift.Sendable, Buffer.Element == Swift.UInt8 {
+    where Buffer: Swift.Sendable, Buffer.Element == Byte {
         /// Creates a CalVer byte-stream serializer.
         ///
         /// Stateless — instances are interchangeable.
@@ -81,7 +81,7 @@ extension Version.Calendar.Serializer: Serializer_Primitives.Serializer.`Protoco
     static func appendModifier(_ modifier: Swift.String?, into buffer: inout Buffer) {
         if let modifier {
             buffer.append(0x2D)
-            buffer.append(contentsOf: modifier.utf8)
+            buffer.append(contentsOf: modifier.utf8.lazy.map(Byte.init))
         }
     }
 }

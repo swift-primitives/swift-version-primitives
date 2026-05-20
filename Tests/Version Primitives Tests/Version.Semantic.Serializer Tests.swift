@@ -9,6 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
+import Byte_Primitives
+import Byte_Primitives_Standard_Library_Integration
 import Parser_Primitives
 import Serializer_Primitives
 import Testing
@@ -19,7 +21,7 @@ struct VersionSemanticSerializerTests {
     @Test
     func `Serializes a bare version to bytes`() {
         let version = Version.Semantic(major: 1, minor: 2, patch: 3)
-        var buffer: [Swift.UInt8] = []
+        var buffer: [Byte] = []
         Version.Semantic.Serializer().serialize(version, into: &buffer)
         #expect(Swift.String(decoding: buffer, as: Swift.UTF8.self) == "1.2.3")
     }
@@ -27,7 +29,7 @@ struct VersionSemanticSerializerTests {
     @Test
     func `Serializes with prerelease and build metadata`() throws(Version.Semantic.Error) {
         let version = try Version.Semantic("1.2.3-alpha.1+sha.abc123")
-        var buffer: [Swift.UInt8] = []
+        var buffer: [Byte] = []
         Version.Semantic.Serializer().serialize(version, into: &buffer)
         #expect(Swift.String(decoding: buffer, as: Swift.UTF8.self) == "1.2.3-alpha.1+sha.abc123")
     }
@@ -48,7 +50,7 @@ struct VersionSemanticSerializerTests {
         ]
         for input in inputs {
             let parsed = try Version.Semantic(input)
-            var buffer: [Swift.UInt8] = []
+            var buffer: [Byte] = []
             Version.Semantic.Serializer().serialize(parsed, into: &buffer)
             let roundTripped = Swift.String(decoding: buffer, as: Swift.UTF8.self)
             #expect(roundTripped == input, "round-trip failure for \(input)")
@@ -58,7 +60,7 @@ struct VersionSemanticSerializerTests {
     @Test
     func `Serializer output matches description`() throws(Version.Semantic.Error) {
         let version = try Version.Semantic("2.0.0-rc.1+build.99")
-        var buffer: [Swift.UInt8] = []
+        var buffer: [Byte] = []
         Version.Semantic.Serializer().serialize(version, into: &buffer)
         #expect(Swift.String(decoding: buffer, as: Swift.UTF8.self) == version.description)
     }

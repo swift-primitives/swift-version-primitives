@@ -102,8 +102,8 @@ extension Version {
         ///
         /// PATCH is rendered only when the source had it.
         public var description: Swift.String {
-            var buffer: [Swift.UInt8] = []
-            Version.Tools.Serializer<[Swift.UInt8]>().serialize(self, into: &buffer)
+            var buffer: [Byte] = []
+            Version.Tools.Serializer<[Byte]>().serialize(self, into: &buffer)
             return Swift.String(decoding: buffer, as: Swift.UTF8.self)
         }
 

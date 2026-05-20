@@ -108,8 +108,8 @@ extension Version {
         /// Components present in the case are rendered; the
         /// modifier is appended with a leading `-` when present.
         public var description: Swift.String {
-            var buffer: [Swift.UInt8] = []
-            Version.Calendar.Serializer<[Swift.UInt8]>().serialize(self, into: &buffer)
+            var buffer: [Byte] = []
+            Version.Calendar.Serializer<[Byte]>().serialize(self, into: &buffer)
             return Swift.String(decoding: buffer, as: Swift.UTF8.self)
         }
 

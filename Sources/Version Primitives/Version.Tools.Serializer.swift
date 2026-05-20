@@ -20,7 +20,7 @@ extension Version.Tools {
     /// the typed value, so `"6.3"` round-trips back to `"6.3"`
     /// rather than `"6.3.0"`.
     public struct Serializer<Buffer: Swift.RangeReplaceableCollection>: Swift.Sendable
-    where Buffer: Swift.Sendable, Buffer.Element == Swift.UInt8 {
+    where Buffer: Swift.Sendable, Buffer.Element == Byte {
         /// Creates a tools-version byte-stream serializer.
         ///
         /// Stateless — instances are interchangeable.
