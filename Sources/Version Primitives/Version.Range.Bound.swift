@@ -16,7 +16,7 @@ extension Version.Range {
     /// - ``inclusive(_:)``: the boundary value is part of the range
     /// - ``exclusive(_:)``: the boundary value is NOT part of the
     ///   range
-    public enum Bound: Swift.Sendable, Swift.Hashable {
+    public enum Bound: Swift.Hashable {
         /// No bound on this side — the range extends to infinity.
         case unbounded
 
@@ -27,3 +27,5 @@ extension Version.Range {
         case exclusive(Underlying)
     }
 }
+
+extension Version.Range.Bound: Swift.Sendable where Underlying: Swift.Sendable {}

@@ -32,7 +32,7 @@ extension Version {
     /// Intersection / complement are not modeled as constructors —
     /// they fall out of compositions of the existing five and are
     /// best derived per consumer demand.
-    public indirect enum Set<Underlying: Swift.Sendable & Swift.Hashable & Swift.Comparable>: Swift.Sendable, Swift.Hashable {
+    public indirect enum Set<Underlying: Swift.Hashable & Swift.Comparable>: Swift.Hashable {
         /// The empty set — matches no version.
         case empty
 
@@ -77,3 +77,5 @@ extension Version.Set {
         }
     }
 }
+
+extension Version.Set: Swift.Sendable where Underlying: Swift.Sendable {}

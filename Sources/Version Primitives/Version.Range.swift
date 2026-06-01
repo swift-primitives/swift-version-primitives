@@ -35,7 +35,7 @@ extension Version {
     /// ``contains(_:)`` honors each bound's inclusive/exclusive
     /// flavor — semantically equivalent to mathematical interval
     /// containment.
-    public struct Range<Underlying: Swift.Sendable & Swift.Hashable & Swift.Comparable>: Swift.Sendable, Swift.Hashable {
+    public struct Range<Underlying: Swift.Hashable & Swift.Comparable>: Swift.Hashable {
         /// The lower bound of the interval.
         public let lowerBound: Bound
 
@@ -79,3 +79,7 @@ extension Version {
         }
     }
 }
+
+// Generic types conform to Sendable conditionally per [MEM-SEND-013]:
+// welcome the conformance, drop the instantiation restriction.
+extension Version.Range: Swift.Sendable where Underlying: Swift.Sendable {}
