@@ -111,7 +111,8 @@ extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
                     i = input.index(after: i)
                     consumed += 1
                 }
-                let badRun = Swift.String(decoding: input[input.startIndex..<i], as: Swift.UTF8.self)
+                let slice: Input = input[input.startIndex..<i]
+                let badRun: Swift.String = Swift.String(decoding: slice, as: Swift.UTF8.self)
                 throw .invalidToolsVersionIdentifier(
                     input: originalString,
                     identifier: badRun,
