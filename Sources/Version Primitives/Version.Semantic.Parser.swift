@@ -44,7 +44,7 @@ extension Version.Semantic {
     /// let version = try Version.Semantic.Parser().parse(&input)
     /// // version.major.underlying == 1
     /// ```
-    public struct Parser<Input: Collection.Slice.`Protocol` & Swift.Collection>: Swift.Sendable
+    public struct Parser<Input: Collection.Slice.`Protocol`>: Swift.Sendable
     where Input: Swift.Sendable, Input.Element == Byte {
         /// Creates a SemVer 2.0.0 byte-stream parser.
         ///
@@ -73,7 +73,7 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
     public func parse(_ input: inout Input) throws(Version.Semantic.Error) -> Version.Semantic {
         let originalSlice = input[input.startIndex..<Self.findSemVerEnd(in: input)]
         let originalString = Swift.String(decoding: originalSlice, as: Swift.UTF8.self)
-        var offset: Swift.UInt = 0
+        var offset: Index<Byte> = .zero
 
         let major = try Self.parseCoreNumber(&input, offset: &offset, in: originalString)
         try Self.consumeDelimiter(0x2E, in: &input, offset: &offset, original: originalString)
@@ -84,14 +84,14 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
         var preRelease: [Version.Semantic.Identifier] = []
         if input.first == 0x2D {
             input = input[input.index(after: input.startIndex)...]
-            offset += 1
+            offset += .one
             preRelease = try Self.parsePreReleaseIdentifiers(&input, offset: &offset, original: originalString)
         }
 
         var build: [Swift.String] = []
         if input.first == 0x2B {
             input = input[input.index(after: input.startIndex)...]
-            offset += 1
+            offset += .one
             build = try Self.parseBuildMetadataIdentifiers(&input, offset: &offset, original: originalString)
         }
 
@@ -122,20 +122,15 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
     }
 
     @inlinable
-    static func position(_ offset: Swift.UInt) -> Text.Position {
-        Text.Position(_unchecked: Ordinal(offset))
-    }
-
-    @inlinable
-    static func range(from start: Swift.UInt, to end: Swift.UInt) -> Text.Range {
-        Text.Range(start: Self.position(start), end: Self.position(end))
+    static func range(from start: Index<Byte>, to end: Index<Byte>) -> Text.Range {
+        Text.Range(start: start.retag(Text.self), end: end.retag(Text.self))
     }
 
     // §2 — MAJOR / MINOR / PATCH: numeric, no leading zeros.
     @usableFromInline
     static func parseCoreNumber(
         _ input: inout Input,
-        offset: inout Swift.UInt,
+        offset: inout Index<Byte>,
         in originalString: Swift.String
     ) throws(Version.Semantic.Error) -> Swift.UInt {
         let startOffset = offset
@@ -150,17 +145,15 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
             let nextIdx = input.index(after: input.startIndex)
             if nextIdx < input.endIndex, ASCII.Classification.isDigit(input[nextIdx].underlying) {
                 var i = input.startIndex
-                var consumed: Swift.UInt = 0
                 while i < input.endIndex, ASCII.Classification.isDigit(input[i].underlying) {
                     i = input.index(after: i)
-                    consumed += 1
                 }
-                let slice: Input = input[input.startIndex..<i]
-                let badRun: Swift.String = Swift.String(decoding: slice, as: Swift.UTF8.self)
+                let badSlice = input[input.startIndex..<i]
+                let badRun = Swift.String(decoding: badSlice, as: Swift.UTF8.self)
                 throw .invalidVersionCoreIdentifier(
                     input: originalString,
                     identifier: badRun,
-                    range: Self.range(from: startOffset, to: startOffset + consumed)
+                    range: Self.range(from: startOffset, to: startOffset + badSlice.count)
                 )
             }
         }
@@ -175,8 +168,7 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
                 range: Self.range(from: startOffset, to: startOffset)
             )
         }
-        let consumed = Swift.UInt(countBefore - input.count)
-        offset += consumed
+        offset += countBefore.subtract.saturating(input.count)
         return value
     }
 
@@ -187,7 +179,7 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
     static func consumeDelimiter(
         _ byte: Byte,
         in input: inout Input,
-        offset: inout Swift.UInt,
+        offset: inout Index<Byte>,
         original originalString: Swift.String
     ) throws(Version.Semantic.Error) {
         guard input.first == byte else {
@@ -198,7 +190,7 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
             )
         }
         input = input[input.index(after: input.startIndex)...]
-        offset += 1
+        offset += .one
     }
 
     // Counts dot-separated segments in the version-core portion
@@ -220,7 +212,7 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
     @usableFromInline
     static func parsePreReleaseIdentifiers(
         _ input: inout Input,
-        offset: inout Swift.UInt,
+        offset: inout Index<Byte>,
         original originalString: Swift.String
     ) throws(Version.Semantic.Error) -> [Version.Semantic.Identifier] {
         var identifiers: [Version.Semantic.Identifier] = []
@@ -244,7 +236,7 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
             }
             let allDigits = identifierSlice.allSatisfy { ASCII.Classification.isDigit($0.underlying) }
             if allDigits {
-                if identifierSlice.count > 1 && identifierSlice.first == 0x30 {
+                if identifierSlice.first == 0x30 && identifierSlice.index(after: identifierSlice.startIndex) < identifierSlice.endIndex {
                     throw .leadingZeroInNumericPreReleaseIdentifier(
                         input: originalString,
                         identifier: text,
@@ -272,7 +264,7 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
     @usableFromInline
     static func parseBuildMetadataIdentifiers(
         _ input: inout Input,
-        offset: inout Swift.UInt,
+        offset: inout Index<Byte>,
         original originalString: Swift.String
     ) throws(Version.Semantic.Error) -> [Swift.String] {
         var identifiers: [Swift.String] = []
@@ -303,19 +295,17 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
     // the returned slice — this scanner is permissive so callers
     // can surface the specific spec-section's error case.
     @usableFromInline
-    static func takeIdentifier(_ input: inout Input, offset: inout Swift.UInt) -> Input {
+    static func takeIdentifier(_ input: inout Input, offset: inout Index<Byte>) -> Input {
         let startIndex = input.startIndex
         var i = startIndex
-        var consumed: Swift.UInt = 0
         while i < input.endIndex {
             let byte = input[i]
             if byte == 0x2E || byte == 0x2B { break }
             i = input.index(after: i)
-            consumed += 1
         }
         let slice = input[startIndex..<i]
         input = input[i...]
-        offset += consumed
+        offset += slice.count
         return slice
     }
 
@@ -327,10 +317,10 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
     // Advances past a leading '.' if present. Chains dot-separated
     // identifiers inside pre-release and build-metadata segments.
     @usableFromInline
-    static func consumeIfDot(_ input: inout Input, offset: inout Swift.UInt) -> Swift.Bool {
+    static func consumeIfDot(_ input: inout Input, offset: inout Index<Byte>) -> Swift.Bool {
         if input.first == 0x2E {
             input = input[input.index(after: input.startIndex)...]
-            offset += 1
+            offset += .one
             return true
         }
         return false

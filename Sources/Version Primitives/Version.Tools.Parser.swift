@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import ASCII_Decimal_Parser_Primitives
+public import Byte_Parser_Primitives
 public import ASCII_Primitives
 public import Byte_Primitives
 internal import Byte_Primitives_Standard_Library_Integration
@@ -25,7 +26,7 @@ extension Version.Tools {
     /// type can be composed inside larger byte-stream grammars
     /// (typically a Package.swift `// swift-tools-version: 6.3`
     /// comment scanner).
-    public struct Parser<Input: Collection.Slice.`Protocol` & Swift.Collection>: Swift.Sendable
+    public struct Parser<Input: Collection.Slice.`Protocol`>: Swift.Sendable
     where Input: Swift.Sendable, Input.Element == Byte {
         /// Creates a tools-version byte-stream parser.
         @inlinable
@@ -44,7 +45,7 @@ extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
     public func parse(_ input: inout Input) throws(Version.Tools.Error) -> Version.Tools {
         let originalSlice = input[input.startIndex..<Self.findToolsVersionEnd(in: input)]
         let originalString = Swift.String(decoding: originalSlice, as: Swift.UTF8.self)
-        var offset: Swift.UInt = 0
+        var offset: Index<Byte> = .zero
 
         let major = try Self.parseNumber(&input, offset: &offset, in: originalString)
         try Self.consumeDot(in: &input, offset: &offset, original: originalString)
@@ -53,7 +54,7 @@ extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
         var patch: Swift.UInt?
         if input.first == 0x2E {
             input = input[input.index(after: input.startIndex)...]
-            offset += 1
+            offset += .one
             patch = try Self.parseNumber(&input, offset: &offset, in: originalString)
         }
 
@@ -79,19 +80,14 @@ extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
     }
 
     @inlinable
-    static func position(_ offset: Swift.UInt) -> Text.Position {
-        Text.Position(_unchecked: Ordinal(offset))
-    }
-
-    @inlinable
-    static func range(from start: Swift.UInt, to end: Swift.UInt) -> Text.Range {
-        Text.Range(start: Self.position(start), end: Self.position(end))
+    static func range(from start: Index<Byte>, to end: Index<Byte>) -> Text.Range {
+        Text.Range(start: start.retag(Text.self), end: end.retag(Text.self))
     }
 
     @usableFromInline
     static func parseNumber(
         _ input: inout Input,
-        offset: inout Swift.UInt,
+        offset: inout Index<Byte>,
         in originalString: Swift.String
     ) throws(Version.Tools.Error) -> Swift.UInt {
         let startOffset = offset
@@ -106,17 +102,15 @@ extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
             let nextIdx = input.index(after: input.startIndex)
             if nextIdx < input.endIndex, ASCII.Classification.isDigit(input[nextIdx].underlying) {
                 var i = input.startIndex
-                var consumed: Swift.UInt = 0
                 while i < input.endIndex, ASCII.Classification.isDigit(input[i].underlying) {
                     i = input.index(after: i)
-                    consumed += 1
                 }
-                let slice: Input = input[input.startIndex..<i]
-                let badRun: Swift.String = Swift.String(decoding: slice, as: Swift.UTF8.self)
+                let badSlice = input[input.startIndex..<i]
+                let badRun = Swift.String(decoding: badSlice, as: Swift.UTF8.self)
                 throw .invalidToolsVersionIdentifier(
                     input: originalString,
                     identifier: badRun,
-                    range: Self.range(from: startOffset, to: startOffset + consumed)
+                    range: Self.range(from: startOffset, to: startOffset + badSlice.count)
                 )
             }
         }
@@ -131,14 +125,14 @@ extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
                 range: Self.range(from: startOffset, to: startOffset)
             )
         }
-        offset += Swift.UInt(countBefore - input.count)
+        offset += countBefore.subtract.saturating(input.count)
         return value
     }
 
     @usableFromInline
     static func consumeDot(
         in input: inout Input,
-        offset: inout Swift.UInt,
+        offset: inout Index<Byte>,
         original originalString: Swift.String
     ) throws(Version.Tools.Error) {
         guard input.first == 0x2E else {
@@ -148,6 +142,6 @@ extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
             )
         }
         input = input[input.index(after: input.startIndex)...]
-        offset += 1
+        offset += .one
     }
 }

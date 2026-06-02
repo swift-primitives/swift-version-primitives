@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 public import ASCII_Decimal_Parser_Primitives
+public import Byte_Parser_Primitives
 public import ASCII_Primitives
 public import Byte_Primitives
 internal import Byte_Primitives_Standard_Library_Integration
@@ -26,7 +27,7 @@ extension Version.Calendar {
     /// (`[0-9A-Za-z.-]`). Distinguishes the three CalVer schemes
     /// (yearOnly, yearMonth, full) by the number of dot-separated
     /// numeric components consumed before any modifier.
-    public struct Parser<Input: Collection.Slice.`Protocol` & Swift.Collection>: Swift.Sendable
+    public struct Parser<Input: Collection.Slice.`Protocol`>: Swift.Sendable
     where Input: Swift.Sendable, Input.Element == Byte {
         /// Creates a CalVer byte-stream parser.
         ///
@@ -54,7 +55,7 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
     public func parse(_ input: inout Input) throws(Version.Calendar.Error) -> Version.Calendar {
         let originalSlice = input[input.startIndex..<Self.findCalendarEnd(in: input)]
         let originalString = Swift.String(decoding: originalSlice, as: Swift.UTF8.self)
-        var offset: Swift.UInt = 0
+        var offset: Index<Byte> = .zero
 
         let yearValue = try Self.parseNumber(&input, offset: &offset, in: originalString)
         let year = Time.Year(Swift.Int(yearValue))
@@ -64,7 +65,7 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
 
         if input.first == 0x2E {
             input = input[input.index(after: input.startIndex)...]
-            offset += 1
+            offset += .one
             let monthStart = offset
             let monthValue = try Self.parseNumber(&input, offset: &offset, in: originalString)
             let timeMonth: Time.Month
@@ -80,7 +81,7 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
             monthPair = (timeMonth, monthValue)
             if input.first == 0x2E {
                 input = input[input.index(after: input.startIndex)...]
-                offset += 1
+                offset += .one
                 micro = try Self.parseNumber(&input, offset: &offset, in: originalString)
             }
         }
@@ -88,7 +89,7 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
         var modifier: Swift.String?
         if input.first == 0x2D {
             input = input[input.index(after: input.startIndex)...]
-            offset += 1
+            offset += .one
             modifier = try Self.parseModifier(&input, offset: &offset, original: originalString)
         }
 
@@ -119,19 +120,14 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
     }
 
     @inlinable
-    static func position(_ offset: Swift.UInt) -> Text.Position {
-        Text.Position(_unchecked: Ordinal(offset))
-    }
-
-    @inlinable
-    static func range(from start: Swift.UInt, to end: Swift.UInt) -> Text.Range {
-        Text.Range(start: Self.position(start), end: Self.position(end))
+    static func range(from start: Index<Byte>, to end: Index<Byte>) -> Text.Range {
+        Text.Range(start: start.retag(Text.self), end: end.retag(Text.self))
     }
 
     @usableFromInline
     static func parseNumber(
         _ input: inout Input,
-        offset: inout Swift.UInt,
+        offset: inout Index<Byte>,
         in originalString: Swift.String
     ) throws(Version.Calendar.Error) -> Swift.UInt {
         let startOffset = offset
@@ -154,27 +150,25 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
                 range: Self.range(from: startOffset, to: startOffset)
             )
         }
-        offset += Swift.UInt(countBefore - input.count)
+        offset += countBefore.subtract.saturating(input.count)
         return value
     }
 
     @usableFromInline
     static func parseModifier(
         _ input: inout Input,
-        offset: inout Swift.UInt,
+        offset: inout Index<Byte>,
         original originalString: Swift.String
     ) throws(Version.Calendar.Error) -> Swift.String {
         let startOffset = offset
         let startIndex = input.startIndex
         var i = startIndex
-        var consumed: Swift.UInt = 0
         while i < input.endIndex, Self.isModifierByte(input[i]) {
             i = input.index(after: i)
-            consumed += 1
         }
         let slice = input[startIndex..<i]
         input = input[i...]
-        offset += consumed
+        offset += slice.count
         if slice.isEmpty {
             throw .emptyModifier(
                 input: originalString,
