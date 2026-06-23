@@ -11,7 +11,7 @@
 
 public import ASCII_Primitives
 public import Serializer_Primitives
-public import Time_Primitives_Core
+public import Time_Primitives
 
 extension Version.Calendar {
     /// Byte-stream serializer for CalVer.

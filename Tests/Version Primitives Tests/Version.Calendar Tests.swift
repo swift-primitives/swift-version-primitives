@@ -10,7 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Testing
-import Time_Primitives_Core
+import Time_Primitives
 import Version_Primitives
 
 @Suite("Version.Calendar")

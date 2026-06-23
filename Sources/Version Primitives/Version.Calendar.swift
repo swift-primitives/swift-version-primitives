@@ -15,7 +15,7 @@ internal import Byte_Primitives_Standard_Library_Integration
 public import Parser_Primitives
 public import Tagged_Primitives
 public import Text_Primitives
-public import Time_Primitives_Core
+public import Time_Primitives
 
 extension Version {
     /// Calendar Versioning per calver.org.

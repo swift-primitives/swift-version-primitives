@@ -9,7 +9,7 @@
 //
 // ===----------------------------------------------------------------------===//
 
-internal import Time_Primitives_Core
+internal import Time_Primitives
 
 extension Version.Calendar: Swift.CustomDebugStringConvertible {
     /// A structural representation preserving the case form and

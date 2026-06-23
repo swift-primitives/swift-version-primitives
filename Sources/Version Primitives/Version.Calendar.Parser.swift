@@ -18,7 +18,7 @@ public import Collection_Primitives
 internal import Ordinal_Primitives
 public import Parser_Primitives
 public import Text_Primitives
-internal import Time_Primitives_Core
+internal import Time_Primitives
 
 extension Version.Calendar {
     /// Byte-stream parser for CalVer.

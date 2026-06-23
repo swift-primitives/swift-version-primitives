@@ -74,7 +74,7 @@ let package = Package(
                 .product(name: "Serializer Primitives", package: "swift-serializer-primitives"),
                 .product(name: "Tagged Primitives", package: "swift-tagged-primitives"),
                 .product(name: "Text Primitives", package: "swift-text-primitives"),
-                .product(name: "Time Primitives Core", package: "swift-time-primitives"),
+                .product(name: "Time Primitives", package: "swift-time-primitives"),
             ]
         ),
         .target(
