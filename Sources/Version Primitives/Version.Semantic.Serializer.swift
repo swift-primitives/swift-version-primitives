@@ -54,16 +54,16 @@ extension Version.Semantic.Serializer: Serializer_Primitives.Serializer.`Protoco
     ///
     /// The form is `MAJOR.MINOR.PATCH` followed optionally by
     /// `-<pre-release>` and/or `+<build-metadata>`. Each numeric
-    /// component is rendered via ``ASCII/Serialization/serializeDecimal(_:into:)``;
+    /// component is rendered via ``ASCII/Decimal/serialize(_:into:)``;
     /// alphanumeric identifiers are appended directly as their
     /// UTF-8 bytes.
     @inlinable
     public func serialize(_ output: Version.Semantic, into buffer: inout Buffer) {
-        ASCII.Serialization.serializeDecimal(output.major.underlying, into: &buffer)
+        ASCII.Decimal.serialize(output.major.underlying, into: &buffer)
         buffer.append(0x2E)
-        ASCII.Serialization.serializeDecimal(output.minor.underlying, into: &buffer)
+        ASCII.Decimal.serialize(output.minor.underlying, into: &buffer)
         buffer.append(0x2E)
-        ASCII.Serialization.serializeDecimal(output.patch.underlying, into: &buffer)
+        ASCII.Decimal.serialize(output.patch.underlying, into: &buffer)
 
         if !output.preReleaseIdentifiers.isEmpty {
             buffer.append(0x2D)
@@ -73,7 +73,7 @@ extension Version.Semantic.Serializer: Serializer_Primitives.Serializer.`Protoco
                 }
                 switch identifier {
                 case .numeric(let value):
-                    ASCII.Serialization.serializeDecimal(value, into: &buffer)
+                    ASCII.Decimal.serialize(value, into: &buffer)
 
                 case .alphanumeric(let text):
                     buffer.append(contentsOf: text.utf8.lazy.map(Byte.init))

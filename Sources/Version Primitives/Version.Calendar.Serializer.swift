@@ -47,17 +47,17 @@ extension Version.Calendar.Serializer: Serializer_Primitives.Serializer.`Protoco
     public func serialize(_ output: Version.Calendar, into buffer: inout Buffer) {
         switch output {
         case .yearOnly(let year, let modifier):
-            ASCII.Serialization.serializeDecimal(Swift.UInt(year.rawValue), into: &buffer)
+            ASCII.Decimal.serialize(Swift.UInt(year.rawValue), into: &buffer)
             Self.appendModifier(modifier, into: &buffer)
 
         case .yearMonth(let year, let month, let modifier):
-            ASCII.Serialization.serializeDecimal(Swift.UInt(year.rawValue), into: &buffer)
+            ASCII.Decimal.serialize(Swift.UInt(year.rawValue), into: &buffer)
             buffer.append(0x2E)
             Self.appendPadded(Swift.UInt(month.rawValue), into: &buffer)
             Self.appendModifier(modifier, into: &buffer)
 
         case .full(let year, let month, let micro, let modifier):
-            ASCII.Serialization.serializeDecimal(Swift.UInt(year.rawValue), into: &buffer)
+            ASCII.Decimal.serialize(Swift.UInt(year.rawValue), into: &buffer)
             buffer.append(0x2E)
             Self.appendPadded(Swift.UInt(month.rawValue), into: &buffer)
             buffer.append(0x2E)
@@ -74,7 +74,7 @@ extension Version.Calendar.Serializer: Serializer_Primitives.Serializer.`Protoco
         if value < 10 {
             buffer.append(0x30)
         }
-        ASCII.Serialization.serializeDecimal(value, into: &buffer)
+        ASCII.Decimal.serialize(value, into: &buffer)
     }
 
     @inlinable

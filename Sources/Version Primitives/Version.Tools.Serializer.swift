@@ -39,12 +39,12 @@ extension Version.Tools.Serializer: Serializer_Primitives.Serializer.`Protocol` 
     /// Appends the canonical SE-0152 byte form to `buffer`.
     @inlinable
     public func serialize(_ output: Version.Tools, into buffer: inout Buffer) {
-        ASCII.Serialization.serializeDecimal(output.major.underlying, into: &buffer)
+        ASCII.Decimal.serialize(output.major.underlying, into: &buffer)
         buffer.append(0x2E)
-        ASCII.Serialization.serializeDecimal(output.minor.underlying, into: &buffer)
+        ASCII.Decimal.serialize(output.minor.underlying, into: &buffer)
         if let patch = output.patch {
             buffer.append(0x2E)
-            ASCII.Serialization.serializeDecimal(patch.underlying, into: &buffer)
+            ASCII.Decimal.serialize(patch.underlying, into: &buffer)
         }
     }
 }
