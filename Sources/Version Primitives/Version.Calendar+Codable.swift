@@ -29,7 +29,7 @@
             let string = try container.decode(Swift.String.self)
             do {
                 self = try Version.Calendar(parsing: string)
-            } catch let error as Version.Calendar.Error {
+            } catch let error as Self.Error {
                 throw DecodingError.dataCorruptedError(
                     in: container,
                     debugDescription: "Invalid CalVer string '\(string)': \(error)"

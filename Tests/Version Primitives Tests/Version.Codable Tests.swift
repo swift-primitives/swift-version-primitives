@@ -9,9 +9,10 @@
 //
 // ===----------------------------------------------------------------------===//
 
-// JSON Encoder/Decoder are Foundation-bound and use untyped throws via the
-// Codable protocol — both rules are deliberately exempted across this file.
-// swiftlint:disable no_foundation_import_warning typed_throws_required
+// JSON Encoder/Decoder are Foundation-bound — the rule is deliberately
+// exempted across this file. (`typed_throws_required` applies to Sources/
+// only, so the Codable protocol's untyped throws needs no exemption here.)
+// swiftlint:disable no_foundation_import_warning
 import Foundation
 import Testing
 import Version_Primitives
@@ -59,4 +60,4 @@ struct VersionCodableTests {
         }
     }
 }
-// swiftlint:enable no_foundation_import_warning typed_throws_required
+// swiftlint:enable no_foundation_import_warning

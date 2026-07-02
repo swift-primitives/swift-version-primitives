@@ -29,7 +29,7 @@
             let string = try container.decode(Swift.String.self)
             do {
                 self = try Version.Semantic(string)
-            } catch let error as Version.Semantic.Error {
+            } catch let error as Self.Error {
                 throw DecodingError.dataCorruptedError(
                     in: container,
                     debugDescription: "Invalid SemVer 2.0.0 string '\(string)': \(error)"

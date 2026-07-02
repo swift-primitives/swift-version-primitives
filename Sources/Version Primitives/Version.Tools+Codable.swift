@@ -29,7 +29,7 @@
             let string = try container.decode(Swift.String.self)
             do {
                 self = try Version.Tools(parsing: string)
-            } catch let error as Version.Tools.Error {
+            } catch let error as Self.Error {
                 throw DecodingError.dataCorruptedError(
                     in: container,
                     debugDescription: "Invalid tools-version string '\(string)': \(error)"
