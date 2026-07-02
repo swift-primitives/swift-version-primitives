@@ -40,9 +40,11 @@ let b = try Version.Semantic("1.0.0+b")
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-primitives/swift-version-primitives.git", from: "0.1.0"),
+    .package(url: "https://github.com/swift-primitives/swift-version-primitives.git", branch: "main"),
 ]
 ```
+
+> Pre-1.0: no version tags yet. APIs may change; pin a commit for reproducible builds.
 
 ```swift
 .target(
