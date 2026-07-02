@@ -6,3 +6,4 @@ parent_config: https://raw.githubusercontent.com/swift-primitives/.github/main/.
 # Package-specific overrides
 disabled_rules:
   - function_parameter_count
+  - comma                        # Conflicts with swift-format: swift-format's Spacing rule mandates no space after the comma in @_implements(Protocol,Requirement) attribute argument lists, which swiftlint's comma rule would flag. swift-format is authoritative on formatting (mirrors the parent config's opening_brace disable).

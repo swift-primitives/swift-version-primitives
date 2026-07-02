@@ -9,8 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-import Parser_Primitives
 public import Byte_Parser_Primitives
+import Parser_Primitives
 import Testing
 import Version_Primitives
 

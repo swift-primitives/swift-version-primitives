@@ -25,6 +25,7 @@ extension Version.Semantic {
     /// overload resolution selects the throwing form when `try`
     /// is present at the call site and the failable form otherwise.
     @inlinable
+    // swiftlint:disable:next prefer_self_in_static_references - reason: typed-throws clauses spell out the concrete error type per [API-ERR-001]; `throws(Self.Error)` would obscure the thrown type at the call site.
     public init(_ string: Swift.String) throws(Version.Semantic.Error) {
         try self.init(parsing: string)
     }

@@ -11,7 +11,9 @@
 
 extension Version.Range {
     /// Construct a `Version.Range` from a `Swift.Range` — the
-    /// half-open `lower..<upper` form. The resulting range has an
+    /// half-open `lower..<upper` form.
+    ///
+    /// The resulting range has an
     /// inclusive lower bound and an exclusive upper bound, matching
     /// SwiftPM's canonical `"X.Y.Z"..<"A.B.C"` semantics for
     /// `.package(url:_:products:)` version ranges.

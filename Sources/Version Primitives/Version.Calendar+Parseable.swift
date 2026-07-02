@@ -10,11 +10,11 @@
 // ===----------------------------------------------------------------------===//
 
 public import Array_Primitives
+public import Buffer_Linear_Primitive
+public import Buffer_Linear_Primitives
 public import Byte_Parser_Primitives
 public import Parser_Primitives
 public import Shared_Primitive
-public import Buffer_Linear_Primitive
-public import Buffer_Linear_Primitives
 
 extension Version.Calendar: Parseable {
     /// Pin the `Parseable.Parser` associatedtype to the canonical
@@ -39,7 +39,7 @@ extension Version.Calendar: Parseable {
     /// Empirically validated by
     /// `swift-institute/Experiments/parseable-associatedtype-implements/`
     /// (2026-05-14).
-    @_implements(Parseable, Parser)
+    @_implements(Parseable,Parser)
     public typealias _ParseableParser = Version_Primitives.Version.Calendar.Parser<Byte.Input>
 
     /// The canonical CalVer byte-stream parser instance.

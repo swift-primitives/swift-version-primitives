@@ -9,9 +9,9 @@
 //
 // ===----------------------------------------------------------------------===//
 
-internal import Ordinal_Primitives
 public import Byte_Parser_Primitives
 internal import Byte_Primitives_Standard_Library_Integration
+internal import Ordinal_Primitives
 public import Parser_Primitives
 public import Tagged_Primitives
 public import Text_Primitives
