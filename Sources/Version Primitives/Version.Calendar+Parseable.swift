@@ -13,8 +13,8 @@ public import Array_Primitives
 public import Buffer_Linear_Primitive
 public import Buffer_Linear_Primitives
 public import Byte_Parser_Primitives
-public import Parser_Primitives
 public import Ownership_Shared_Primitive
+public import Parser_Primitives
 
 extension Version.Calendar: Parseable {
     /// Pin the `Parseable.Parser` associatedtype to the canonical
