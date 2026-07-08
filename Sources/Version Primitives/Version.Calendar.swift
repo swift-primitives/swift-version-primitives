@@ -102,53 +102,55 @@ extension Version {
                 return nil
             }
         }
+    }
+}
 
-        /// Canonical calver.org spelling.
-        ///
-        /// Components present in the case are rendered; the
-        /// modifier is appended with a leading `-` when present.
-        public var description: Swift.String {
-            var buffer: [Byte] = []
-            Version.Calendar.Serializer<[Byte]>().serialize(self, into: &buffer)
-            return Swift.String(decoding: buffer, as: Swift.UTF8.self)
+extension Version.Calendar {
+    /// Canonical calver.org spelling.
+    ///
+    /// Components present in the case are rendered; the
+    /// modifier is appended with a leading `-` when present.
+    public var description: Swift.String {
+        var buffer: [Byte] = []
+        Version.Calendar.Serializer<[Byte]>().serialize(self, into: &buffer)
+        return Swift.String(decoding: buffer, as: Swift.UTF8.self)
+    }
+
+    /// calver.org-style precedence — normalizes absent
+    /// components to 0; modifier-bearing versions order LOWER
+    /// than modifier-free versions of the same numeric prefix.
+    public static func < (lhs: Self, rhs: Self) -> Swift.Bool {
+        let (ly, lm, lu, lmod) = lhs.normalized()
+        let (ry, rm, ru, rmod) = rhs.normalized()
+        if ly != ry { return ly < ry }
+        if lm != rm { return lm < rm }
+        if lu != ru { return lu < ru }
+        switch (lmod, rmod) {
+        case (nil, nil): return false
+        case (nil, _?): return false
+        case (_?, nil): return true
+        case (let l?, let r?): return l < r
         }
+    }
 
-        /// calver.org-style precedence — normalizes absent
-        /// components to 0; modifier-bearing versions order LOWER
-        /// than modifier-free versions of the same numeric prefix.
-        public static func < (lhs: Self, rhs: Self) -> Swift.Bool {
-            let (ly, lm, lu, lmod) = lhs.normalized()
-            let (ry, rm, ru, rmod) = rhs.normalized()
-            if ly != ry { return ly < ry }
-            if lm != rm { return lm < rm }
-            if lu != ru { return lu < ru }
-            switch (lmod, rmod) {
-            case (nil, nil): return false
-            case (nil, _?): return false
-            case (_?, nil): return true
-            case (let l?, let r?): return l < r
-            }
+    // Normalize to (year, month, micro, modifier) with absent
+    // numeric components mapped to 0 — for comparison only.
+    @usableFromInline
+    func normalized() -> (year: Swift.Int, month: Swift.Int, micro: Swift.Int, modifier: Swift.String?) {
+        switch self {
+        case .yearOnly(let y, let mod):
+            return (y.rawValue, 0, 0, mod)
+
+        case .yearMonth(let y, let m, let mod):
+            return (y.rawValue, m.rawValue, 0, mod)
+
+        case .full(let y, let m, let micro, let mod):
+            return (y.rawValue, m.rawValue, Swift.Int(micro.underlying), mod)
         }
+    }
 
-        // Normalize to (year, month, micro, modifier) with absent
-        // numeric components mapped to 0 — for comparison only.
-        @usableFromInline
-        func normalized() -> (year: Swift.Int, month: Swift.Int, micro: Swift.Int, modifier: Swift.String?) {
-            switch self {
-            case .yearOnly(let y, let mod):
-                return (y.rawValue, 0, 0, mod)
-
-            case .yearMonth(let y, let m, let mod):
-                return (y.rawValue, m.rawValue, 0, mod)
-
-            case .full(let y, let m, let micro, let mod):
-                return (y.rawValue, m.rawValue, Swift.Int(micro.underlying), mod)
-            }
-        }
-
-        @inlinable
-        static func position(_ offset: Swift.UInt) -> Text.Position {
-            Text.Position(_unchecked: Ordinal(offset))
-        }
+    @inlinable
+    package static func position(_ offset: Swift.UInt) -> Text.Position {
+        Text.Position(_unchecked: Ordinal(offset))
     }
 }

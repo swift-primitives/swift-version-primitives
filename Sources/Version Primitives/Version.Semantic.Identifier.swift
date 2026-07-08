@@ -27,22 +27,24 @@ extension Version.Semantic {
         /// An alphanumeric identifier — at least one non-digit
         /// character per SemVer 2.0.0 §9.
         case alphanumeric(Swift.String)
+    }
+}
 
-        /// SemVer 2.0.0 §11.4 precedence between pre-release identifiers.
-        ///
-        /// - Numeric identifiers always have lower precedence than
-        ///   alphanumeric identifiers.
-        /// - Identifiers consisting of only digits are compared
-        ///   numerically.
-        /// - Identifiers with letters or hyphens are compared
-        ///   lexically in ASCII sort order.
-        public static func < (lhs: Self, rhs: Self) -> Bool {
-            switch (lhs, rhs) {
-            case (.numeric(let l), .numeric(let r)): return l < r
-            case (.numeric, .alphanumeric): return true
-            case (.alphanumeric, .numeric): return false
-            case (.alphanumeric(let l), .alphanumeric(let r)): return l < r
-            }
+extension Version.Semantic.Identifier {
+    /// SemVer 2.0.0 §11.4 precedence between pre-release identifiers.
+    ///
+    /// - Numeric identifiers always have lower precedence than
+    ///   alphanumeric identifiers.
+    /// - Identifiers consisting of only digits are compared
+    ///   numerically.
+    /// - Identifiers with letters or hyphens are compared
+    ///   lexically in ASCII sort order.
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        switch (lhs, rhs) {
+        case (.numeric(let l), .numeric(let r)): return l < r
+        case (.numeric, .alphanumeric): return true
+        case (.alphanumeric, .numeric): return false
+        case (.alphanumeric(let l), .alphanumeric(let r)): return l < r
         }
     }
 }

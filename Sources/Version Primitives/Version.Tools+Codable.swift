@@ -27,9 +27,9 @@
         public init(from decoder: any Decoder) throws {
             let container = try decoder.singleValueContainer()
             let string = try container.decode(Swift.String.self)
-            do {
+            do throws(Self.Error) {
                 self = try Version.Tools(parsing: string)
-            } catch let error as Self.Error {
+            } catch {
                 throw DecodingError.dataCorruptedError(
                     in: container,
                     debugDescription: "Invalid tools-version string '\(string)': \(error)"

@@ -147,97 +147,99 @@ extension Version {
             }
         }
 
-        @inlinable
-        static func position(_ offset: Swift.UInt) -> Text.Position {
-            Text.Position(_unchecked: Ordinal(offset))
+    }
+}
+
+extension Version.Semantic {
+    @inlinable
+    package static func position(_ offset: Swift.UInt) -> Text.Position {
+        Text.Position(_unchecked: Ordinal(offset))
+    }
+
+    // Total dot count across the input string (used only to
+    // populate the §2 error's `found` parameter when trailing
+    // dots indicate a 4+-component core).
+    private static func countDots(in s: Swift.String) -> Swift.Int {
+        var count = 0
+        for byte in s.utf8 where byte == 0x2E {
+            count += 1
         }
+        return count
+    }
 
-        // Total dot count across the input string (used only to
-        // populate the §2 error's `found` parameter when trailing
-        // dots indicate a 4+-component core).
-        private static func countDots(in s: Swift.String) -> Swift.Int {
-            var count = 0
-            for byte in s.utf8 where byte == 0x2E {
-                count += 1
-            }
-            return count
+    /// Canonical SemVer 2.0.0 spelling: `MAJOR.MINOR.PATCH`,
+    /// followed by `-<pre>` if pre-release identifiers are
+    /// present, followed by `+<build>` if build-metadata
+    /// identifiers are present.
+    ///
+    /// Delegates to ``Version/Semantic/Serializer`` for single-
+    /// source-of-truth formatting symmetric with the byte-stream
+    /// parser.
+    public var description: Swift.String {
+        var buffer: [Byte] = []
+        Version.Semantic.Serializer<[Byte]>().serialize(self, into: &buffer)
+        return Swift.String(decoding: buffer, as: Swift.UTF8.self)
+    }
+
+    // SemVer 2.0.0 §10: equality and hashing EXCLUDE build
+    // metadata. Two versions that differ only in build metadata
+    // compare equal.
+
+    /// SemVer 2.0.0 §10 equality — build metadata is excluded.
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.major == rhs.major
+            && lhs.minor == rhs.minor
+            && lhs.patch == rhs.patch
+            && lhs.preReleaseIdentifiers == rhs.preReleaseIdentifiers
+    }
+
+    /// SemVer 2.0.0 §10 hash — build metadata is excluded.
+    public func hash(into hasher: inout Swift.Hasher) {
+        hasher.combine(self.major)
+        hasher.combine(self.minor)
+        hasher.combine(self.patch)
+        hasher.combine(self.preReleaseIdentifiers)
+    }
+
+    // SemVer 2.0.0 §11 precedence:
+    //
+    // 1. Compare MAJOR, MINOR, PATCH numerically.
+    // 2. A version with pre-release identifiers has LOWER
+    //    precedence than a version without (§11.3).
+    // 3. Precedence among pre-release versions: compare
+    //    identifiers left-to-right per §11.4.
+
+    /// SemVer 2.0.0 §11 precedence ordering.
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        if lhs.major != rhs.major { return lhs.major < rhs.major }
+        if lhs.minor != rhs.minor { return lhs.minor < rhs.minor }
+        if lhs.patch != rhs.patch { return lhs.patch < rhs.patch }
+
+        // §11.3: a version with pre-release identifiers has
+        // LOWER precedence than the same MAJOR.MINOR.PATCH
+        // without them.
+        switch (lhs.preReleaseIdentifiers.isEmpty, rhs.preReleaseIdentifiers.isEmpty) {
+        case (true, true): return false
+
+        case (true, false): return false  // lhs is release, rhs is pre-release → lhs > rhs
+
+        case (false, true): return true  // lhs is pre-release, rhs is release → lhs < rhs
+
+        case (false, false):
+            return Self.compareIdentifiers(lhs.preReleaseIdentifiers, rhs.preReleaseIdentifiers)
         }
+    }
 
-        /// Canonical SemVer 2.0.0 spelling: `MAJOR.MINOR.PATCH`,
-        /// followed by `-<pre>` if pre-release identifiers are
-        /// present, followed by `+<build>` if build-metadata
-        /// identifiers are present.
-        ///
-        /// Delegates to ``Version/Semantic/Serializer`` for single-
-        /// source-of-truth formatting symmetric with the byte-stream
-        /// parser.
-        public var description: Swift.String {
-            var buffer: [Byte] = []
-            Version.Semantic.Serializer<[Byte]>().serialize(self, into: &buffer)
-            return Swift.String(decoding: buffer, as: Swift.UTF8.self)
+    // SemVer 2.0.0 §11.4: compare pre-release identifiers
+    // left-to-right; shorter pre-release wins ties on common
+    // prefix.
+    private static func compareIdentifiers(_ lhs: [Identifier], _ rhs: [Identifier]) -> Bool {
+        for (l, r) in zip(lhs, rhs) {
+            if l == r { continue }
+            return l < r
         }
-
-        // SemVer 2.0.0 §10: equality and hashing EXCLUDE build
-        // metadata. Two versions that differ only in build metadata
-        // compare equal.
-
-        /// SemVer 2.0.0 §10 equality — build metadata is excluded.
-        public static func == (lhs: Self, rhs: Self) -> Bool {
-            lhs.major == rhs.major
-                && lhs.minor == rhs.minor
-                && lhs.patch == rhs.patch
-                && lhs.preReleaseIdentifiers == rhs.preReleaseIdentifiers
-        }
-
-        /// SemVer 2.0.0 §10 hash — build metadata is excluded.
-        public func hash(into hasher: inout Swift.Hasher) {
-            hasher.combine(self.major)
-            hasher.combine(self.minor)
-            hasher.combine(self.patch)
-            hasher.combine(self.preReleaseIdentifiers)
-        }
-
-        // SemVer 2.0.0 §11 precedence:
-        //
-        // 1. Compare MAJOR, MINOR, PATCH numerically.
-        // 2. A version with pre-release identifiers has LOWER
-        //    precedence than a version without (§11.3).
-        // 3. Precedence among pre-release versions: compare
-        //    identifiers left-to-right per §11.4.
-
-        /// SemVer 2.0.0 §11 precedence ordering.
-        public static func < (lhs: Self, rhs: Self) -> Bool {
-            if lhs.major != rhs.major { return lhs.major < rhs.major }
-            if lhs.minor != rhs.minor { return lhs.minor < rhs.minor }
-            if lhs.patch != rhs.patch { return lhs.patch < rhs.patch }
-
-            // §11.3: a version with pre-release identifiers has
-            // LOWER precedence than the same MAJOR.MINOR.PATCH
-            // without them.
-            switch (lhs.preReleaseIdentifiers.isEmpty, rhs.preReleaseIdentifiers.isEmpty) {
-            case (true, true): return false
-
-            case (true, false): return false  // lhs is release, rhs is pre-release → lhs > rhs
-
-            case (false, true): return true  // lhs is pre-release, rhs is release → lhs < rhs
-
-            case (false, false):
-                return Self.compareIdentifiers(lhs.preReleaseIdentifiers, rhs.preReleaseIdentifiers)
-            }
-        }
-
-        // SemVer 2.0.0 §11.4: compare pre-release identifiers
-        // left-to-right; shorter pre-release wins ties on common
-        // prefix.
-        private static func compareIdentifiers(_ lhs: [Identifier], _ rhs: [Identifier]) -> Bool {
-            for (l, r) in zip(lhs, rhs) {
-                if l == r { continue }
-                return l < r
-            }
-            // All compared identifiers equal — shorter has lower
-            // precedence per §11.4.
-            return lhs.count < rhs.count
-        }
-
+        // All compared identifiers equal — shorter has lower
+        // precedence per §11.4.
+        return lhs.count < rhs.count
     }
 }

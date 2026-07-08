@@ -115,12 +115,12 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
     }
 
     @inlinable
-    static func isCalendarByte(_ byte: Byte) -> Swift.Bool {
+    package static func isCalendarByte(_ byte: Byte) -> Swift.Bool {
         ASCII.Classification.isAlphanumeric(byte.underlying) || byte == 0x2E || byte == 0x2D
     }
 
     @inlinable
-    static func range(from start: Index<Byte>, to end: Index<Byte>) -> Text.Range {
+    package static func range(from start: Index<Byte>, to end: Index<Byte>) -> Text.Range {
         Text.Range(start: start.retag(Text.self), end: end.retag(Text.self))
     }
 
@@ -187,7 +187,7 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
     }
 
     @inlinable
-    static func isModifierByte(_ byte: Byte) -> Swift.Bool {
+    package static func isModifierByte(_ byte: Byte) -> Swift.Bool {
         ASCII.Classification.isAlphanumeric(byte.underlying) || byte == 0x2D
     }
 }

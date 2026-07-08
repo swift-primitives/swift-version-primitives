@@ -70,7 +70,7 @@ extension Version.Calendar.Serializer: Serializer_Primitives.Serializer.`Protoco
     // if value < 10. Matches the canonical CalVer `0M` / `0D` form
     // (Ubuntu `24.04`, dates `2026.05.13`).
     @inlinable
-    static func appendPadded(_ value: Swift.UInt, into buffer: inout Buffer) {
+    package static func appendPadded(_ value: Swift.UInt, into buffer: inout Buffer) {
         if value < 10 {
             buffer.append(0x30)
         }
@@ -78,7 +78,7 @@ extension Version.Calendar.Serializer: Serializer_Primitives.Serializer.`Protoco
     }
 
     @inlinable
-    static func appendModifier(_ modifier: Swift.String?, into buffer: inout Buffer) {
+    package static func appendModifier(_ modifier: Swift.String?, into buffer: inout Buffer) {
         if let modifier {
             buffer.append(0x2D)
             buffer.append(contentsOf: modifier.utf8.lazy.map(Byte.init))

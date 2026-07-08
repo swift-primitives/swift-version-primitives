@@ -75,12 +75,12 @@ extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
     }
 
     @inlinable
-    static func isToolsVersionByte(_ byte: Byte) -> Swift.Bool {
+    package static func isToolsVersionByte(_ byte: Byte) -> Swift.Bool {
         ASCII.Classification.isDigit(byte.underlying) || byte == 0x2E
     }
 
     @inlinable
-    static func range(from start: Index<Byte>, to end: Index<Byte>) -> Text.Range {
+    package static func range(from start: Index<Byte>, to end: Index<Byte>) -> Text.Range {
         Text.Range(start: start.retag(Text.self), end: end.retag(Text.self))
     }
 

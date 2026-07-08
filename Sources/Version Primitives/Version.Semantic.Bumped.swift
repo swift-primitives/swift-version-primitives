@@ -36,41 +36,8 @@ extension Version.Semantic {
         let base: Version.Semantic
 
         @inlinable
-        init(_ base: Version.Semantic) {
+        package init(_ base: Version.Semantic) {
             self.base = base
-        }
-
-        /// The next major-bumped version (`MAJOR+1.0.0`) per SemVer
-        /// 2.0.0 §8.
-        @inlinable
-        public var major: Version.Semantic {
-            Version.Semantic(
-                major: .init(self.base.major.underlying + 1),
-                minor: 0,
-                patch: 0
-            )
-        }
-
-        /// The next minor-bumped version (`MAJOR.MINOR+1.0`) per
-        /// SemVer 2.0.0 §7.
-        @inlinable
-        public var minor: Version.Semantic {
-            Version.Semantic(
-                major: self.base.major,
-                minor: .init(self.base.minor.underlying + 1),
-                patch: 0
-            )
-        }
-
-        /// The next patch-bumped version (`MAJOR.MINOR.PATCH+1`)
-        /// per SemVer 2.0.0 §6.
-        @inlinable
-        public var patch: Version.Semantic {
-            Version.Semantic(
-                major: self.base.major,
-                minor: self.base.minor,
-                patch: .init(self.base.patch.underlying + 1)
-            )
         }
     }
 
@@ -80,5 +47,40 @@ extension Version.Semantic {
     @inlinable
     public var bumped: Bumped {
         Bumped(self)
+    }
+}
+
+extension Version.Semantic.Bumped {
+    /// The next major-bumped version (`MAJOR+1.0.0`) per SemVer
+    /// 2.0.0 §8.
+    @inlinable
+    public var major: Version.Semantic {
+        Version.Semantic(
+            major: .init(self.base.major.underlying + 1),
+            minor: 0,
+            patch: 0
+        )
+    }
+
+    /// The next minor-bumped version (`MAJOR.MINOR+1.0`) per
+    /// SemVer 2.0.0 §7.
+    @inlinable
+    public var minor: Version.Semantic {
+        Version.Semantic(
+            major: self.base.major,
+            minor: .init(self.base.minor.underlying + 1),
+            patch: 0
+        )
+    }
+
+    /// The next patch-bumped version (`MAJOR.MINOR.PATCH+1`)
+    /// per SemVer 2.0.0 §6.
+    @inlinable
+    public var patch: Version.Semantic {
+        Version.Semantic(
+            major: self.base.major,
+            minor: self.base.minor,
+            patch: .init(self.base.patch.underlying + 1)
+        )
     }
 }
