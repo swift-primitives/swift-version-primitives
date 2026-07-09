@@ -116,7 +116,7 @@ extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
         }
         let countBefore = input.count
         let value: Swift.UInt
-        do {
+        do throws(ASCII.Decimal.Error) {
             value = try ASCII.Decimal.Parser<Input, Swift.UInt>().parse(&input)
         } catch {
             throw .invalidToolsVersionIdentifier(

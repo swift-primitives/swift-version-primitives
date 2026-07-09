@@ -69,7 +69,7 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
             let monthStart = offset
             let monthValue = try Self.parseNumber(&input, offset: &offset, in: originalString)
             let timeMonth: Time.Month
-            do {
+            do throws(Time.Month.Error) {
                 timeMonth = try Time.Month(Swift.Int(monthValue))
             } catch {
                 throw .invalidMonth(
@@ -141,7 +141,7 @@ extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
         _ = firstByte
         let countBefore = input.count
         let value: Swift.UInt
-        do {
+        do throws(ASCII.Decimal.Error) {
             value = try ASCII.Decimal.Parser<Input, Swift.UInt>().parse(&input)
         } catch {
             throw .invalidCalendarIdentifier(

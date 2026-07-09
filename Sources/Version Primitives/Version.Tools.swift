@@ -91,7 +91,7 @@ extension Version {
         /// around ``Version/Tools/init(parsing:)``.
         @inlinable
         public init?(_ description: Swift.String) {
-            do {
+            do throws(Version.Tools.Error) {
                 self = try .init(parsing: description)
             } catch {
                 return nil

@@ -96,7 +96,7 @@ extension Version {
         /// around ``Version/Calendar/init(parsing:)``.
         @inlinable
         public init?(_ description: Swift.String) {
-            do {
+            do throws(Version.Calendar.Error) {
                 self = try .init(parsing: description)
             } catch {
                 return nil
