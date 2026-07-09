@@ -16,8 +16,7 @@ import Serializer_Primitives
 import Testing
 import Version_Primitives
 
-@Suite("Version.Semantic.Serializer")
-struct VersionSemanticSerializerTests {
+@Suite struct `Version.Semantic.Serializer Tests` {
     @Test
     func `Serializes a bare version to bytes`() {
         let version = Version.Semantic(major: 1, minor: 2, patch: 3)

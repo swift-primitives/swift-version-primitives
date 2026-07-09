@@ -12,8 +12,7 @@
 import Testing
 import Version_Primitives
 
-@Suite("Version.Range algebra")
-struct VersionRangeAlgebraTests {
+@Suite struct `Version.Range Algebra Tests` {
     @Test
     func `Unbounded range is not empty`() {
         let range: Version.Range<Version.Semantic> = .all

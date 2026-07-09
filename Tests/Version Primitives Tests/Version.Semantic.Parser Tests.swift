@@ -14,8 +14,7 @@ import Parser_Primitives
 import Testing
 import Version_Primitives
 
-@Suite("Version.Semantic.Parser")
-struct VersionSemanticParserTests {
+@Suite struct `Version.Semantic.Parser Tests` {
     @Test
     func `Parses a bare version from byte input`() throws(Version.Semantic.Error) {
         var input = Byte.Input(utf8: "1.2.3")

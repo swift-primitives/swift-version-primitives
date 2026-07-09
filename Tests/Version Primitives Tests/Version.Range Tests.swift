@@ -12,8 +12,7 @@
 import Testing
 import Version_Primitives
 
-@Suite("Version.Range")
-struct VersionRangeTests {
+@Suite struct `Version.Range Tests` {
     @Test
     func `Unbounded range contains every version`() {
         let range: Version.Range<Version.Semantic> = .all

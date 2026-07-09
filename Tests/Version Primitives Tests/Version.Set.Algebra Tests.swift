@@ -12,8 +12,7 @@
 import Testing
 import Version_Primitives
 
-@Suite("Version.Set algebra")
-struct VersionSetAlgebraTests {
+@Suite struct `Version.Set Algebra Tests` {
     @Test
     func `Empty set isEmpty`() {
         let set: Version.Set<Version.Semantic> = .empty

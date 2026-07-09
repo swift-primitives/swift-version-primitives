@@ -12,15 +12,16 @@
 import Testing
 import Version_Primitives
 
-@Suite("Version.Tools")
-struct VersionToolsTests {
-    @Suite struct Construction {}
-    @Suite struct Comparison {}
-    @Suite struct RoundTrip {}
-    @Suite struct ErrorCases {}
+extension Version.Tools {
+    @Suite struct Test {
+        @Suite struct Construction {}
+        @Suite struct Comparison {}
+        @Suite struct RoundTrip {}
+        @Suite struct ErrorCases {}
+    }
 }
 
-extension VersionToolsTests.Construction {
+extension Version.Tools.Test.Construction {
     @Test
     func `Parses MAJOR.MINOR form`() throws(Version.Tools.Error) {
         let v = try Version.Tools(parsing: "6.3")
@@ -46,7 +47,7 @@ extension VersionToolsTests.Construction {
     }
 }
 
-extension VersionToolsTests.Comparison {
+extension Version.Tools.Test.Comparison {
     @Test
     func `Major dominates`() throws(Version.Tools.Error) {
         let a = try Version.Tools(parsing: "5.99")
@@ -72,7 +73,7 @@ extension VersionToolsTests.Comparison {
     }
 }
 
-extension VersionToolsTests.RoundTrip {
+extension Version.Tools.Test.RoundTrip {
     @Test
     func `Short form round-trips without adding 0 patch`() throws(Version.Tools.Error) {
         let v = try Version.Tools(parsing: "6.3")
@@ -86,7 +87,7 @@ extension VersionToolsTests.RoundTrip {
     }
 }
 
-extension VersionToolsTests.ErrorCases {
+extension Version.Tools.Test.ErrorCases {
     @Test
     func `Single-component rejected`() {
         #expect(throws: Version.Tools.Error.self) {

@@ -12,18 +12,19 @@
 import Testing
 import Version_Primitives
 
-@Suite("Version.Semantic")
-struct VersionSemanticTests {
-    @Suite struct Construction {}
-    @Suite struct Equality {}
-    @Suite struct Precedence {}
-    @Suite struct Description {}
-    @Suite struct ErrorCases {}
+extension Version.Semantic {
+    @Suite struct Test {
+        @Suite struct Construction {}
+        @Suite struct Equality {}
+        @Suite struct Precedence {}
+        @Suite struct Description {}
+        @Suite struct ErrorCases {}
+    }
 }
 
 // MARK: - Construction
 
-extension VersionSemanticTests.Construction {
+extension Version.Semantic.Test.Construction {
     @Test
     func `Parses bare MAJOR.MINOR.PATCH`() throws(Version.Semantic.Error) {
         let v = try Version.Semantic("1.2.3")
@@ -76,7 +77,7 @@ extension VersionSemanticTests.Construction {
 
 // MARK: - Equality
 
-extension VersionSemanticTests.Equality {
+extension Version.Semantic.Test.Equality {
     @Test
     func `Identical versions compare equal`() throws(Version.Semantic.Error) {
         let a = try Version.Semantic("1.2.3")
@@ -108,7 +109,7 @@ extension VersionSemanticTests.Equality {
 
 // MARK: - Precedence
 
-extension VersionSemanticTests.Precedence {
+extension Version.Semantic.Test.Precedence {
     @Test
     func `Major version dominates ordering`() throws(Version.Semantic.Error) {
         let a = try Version.Semantic("1.99.99")
@@ -167,7 +168,7 @@ extension VersionSemanticTests.Precedence {
 
 // MARK: - Description
 
-extension VersionSemanticTests.Description {
+extension Version.Semantic.Test.Description {
     @Test
     func `Bare version round-trips`() throws(Version.Semantic.Error) {
         let v = try Version.Semantic("1.2.3")
@@ -195,7 +196,7 @@ extension VersionSemanticTests.Description {
 
 // MARK: - Error cases
 
-extension VersionSemanticTests.ErrorCases {
+extension Version.Semantic.Test.ErrorCases {
     @Test
     func `Two-component core rejected`() {
         #expect(throws: Version.Semantic.Error.self) {

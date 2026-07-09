@@ -13,15 +13,16 @@ import Testing
 import Time_Primitives
 import Version_Primitives
 
-@Suite("Version.Calendar")
-struct VersionCalendarTests {
-    @Suite struct Construction {}
-    @Suite struct Comparison {}
-    @Suite struct RoundTrip {}
-    @Suite struct ErrorCases {}
+extension Version.Calendar {
+    @Suite struct Test {
+        @Suite struct Construction {}
+        @Suite struct Comparison {}
+        @Suite struct RoundTrip {}
+        @Suite struct ErrorCases {}
+    }
 }
 
-extension VersionCalendarTests.Construction {
+extension Version.Calendar.Test.Construction {
     @Test
     func `Parses year-only`() throws(Version.Calendar.Error) {
         let v = try Version.Calendar(parsing: "2026")
@@ -67,7 +68,7 @@ extension VersionCalendarTests.Construction {
     }
 }
 
-extension VersionCalendarTests.Comparison {
+extension Version.Calendar.Test.Comparison {
     @Test
     func `Newer year is greater`() throws(Version.Calendar.Error) {
         let a = try Version.Calendar(parsing: "2025.12")
@@ -94,7 +95,7 @@ extension VersionCalendarTests.Comparison {
     }
 }
 
-extension VersionCalendarTests.RoundTrip {
+extension Version.Calendar.Test.RoundTrip {
     @Test
     func `Year-only round-trips`() throws(Version.Calendar.Error) {
         let v = try Version.Calendar(parsing: "2026")
@@ -108,7 +109,7 @@ extension VersionCalendarTests.RoundTrip {
     }
 }
 
-extension VersionCalendarTests.ErrorCases {
+extension Version.Calendar.Test.ErrorCases {
     @Test
     func `Empty rejected`() {
         #expect(throws: Version.Calendar.Error.self) {

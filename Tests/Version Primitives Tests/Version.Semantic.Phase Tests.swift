@@ -12,30 +12,31 @@
 import Testing
 import Version_Primitives
 
-@Suite("Version.Semantic.Phase")
-struct VersionSemanticPhaseTests {
-    @Test
-    func `Zero major is initial`() {
-        let v = Version.Semantic(major: 0, minor: 1, patch: 0)
-        #expect(v.phase == .initial)
-    }
+extension Version.Semantic.Phase {
+    @Suite struct Test {
+        @Test
+        func `Zero major is initial`() {
+            let v = Version.Semantic(major: 0, minor: 1, patch: 0)
+            #expect(v.phase == .initial)
+        }
 
-    @Test
-    func `One major is stable`() {
-        let v = Version.Semantic(major: 1, minor: 0, patch: 0)
-        #expect(v.phase == .stable)
-    }
+        @Test
+        func `One major is stable`() {
+            let v = Version.Semantic(major: 1, minor: 0, patch: 0)
+            #expect(v.phase == .stable)
+        }
 
-    @Test
-    func `Pre-release zero-major stays initial`() throws(Version.Semantic.Error) {
-        let v = try Version.Semantic("0.9.0-rc.1")
-        #expect(v.phase == .initial)
-    }
+        @Test
+        func `Pre-release zero-major stays initial`() throws(Version.Semantic.Error) {
+            let v = try Version.Semantic("0.9.0-rc.1")
+            #expect(v.phase == .initial)
+        }
 
-    @Test
-    func `Major bump from zero crosses to stable`() {
-        let initial = Version.Semantic(major: 0, minor: 99, patch: 99)
-        #expect(initial.phase == .initial)
-        #expect(initial.bumped.major.phase == .stable)
+        @Test
+        func `Major bump from zero crosses to stable`() {
+            let initial = Version.Semantic(major: 0, minor: 99, patch: 99)
+            #expect(initial.phase == .initial)
+            #expect(initial.bumped.major.phase == .stable)
+        }
     }
 }
