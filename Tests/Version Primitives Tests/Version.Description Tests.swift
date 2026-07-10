@@ -12,16 +12,11 @@
 import Testing
 import Version_Primitives
 
-@Suite("Description / DebugDescription")
-struct VersionDescriptionTests {
-    @Suite struct RangeBound {}
-    @Suite struct Range {}
-    @Suite struct Set {}
-    @Suite struct Phase {}
-    @Suite struct Calendar {}
-}
-
-extension VersionDescriptionTests.RangeBound {
+// NOTE: `Version.Range.Bound` is nested in the generic `Version.Range<Underlying>`,
+// so it MUST use the [SWIFT-TEST-003] parallel namespace pattern (the
+// [SWIFT-TEST-002] extension pattern is a hard compiler error / silent
+// non-discovery for generic-nested types).
+@Suite struct `Version.Range.Bound Tests` {
     @Test
     func `Unbounded prints as 'unbounded'`() {
         let bound: Version.Range<Version.Semantic>.Bound = .unbounded
@@ -41,6 +36,20 @@ extension VersionDescriptionTests.RangeBound {
         let bound: Version.Range<Version.Semantic>.Bound = .exclusive(v)
         #expect(bound.description == "exclusive(2.0.0)")
     }
+}
+
+// NOTE: `VersionDescriptionTests` groups description/debugDescription coverage
+// across five unrelated host types (Version.Range.Bound, Version.Range,
+// Version.Set, Version.Semantic.Phase, Version.Calendar) with no single
+// tested type of its own — [SWIFT-TEST-002] tested-type resolution is
+// UNRESOLVABLE for this container. Left as adjudication residue; only the
+// compound-named `RangeBound` member (above) was mechanically resolvable.
+@Suite("Description / DebugDescription")
+struct VersionDescriptionTests {
+    @Suite struct Range {}
+    @Suite struct Set {}
+    @Suite struct Phase {}
+    @Suite struct Calendar {}
 }
 
 extension VersionDescriptionTests.Range {
