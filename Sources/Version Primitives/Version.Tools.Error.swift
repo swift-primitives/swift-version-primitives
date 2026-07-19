@@ -19,8 +19,9 @@ extension Version.Tools {
     /// Every case carries a `range: Text.Range` locating the
     /// offending byte span within the parsed input.
     public enum Error: Swift.Error, Swift.Sendable, Swift.Hashable {
-        /// The input contains non-ASCII characters. SE-0152 syntax
-        /// is ASCII-only.
+        /// The input contains non-ASCII characters.
+        ///
+        /// SE-0152 syntax is ASCII-only.
         case nonASCIICharacters(input: Swift.String, range: Text.Range)
 
         /// The input does not parse as either `MAJOR.MINOR` or

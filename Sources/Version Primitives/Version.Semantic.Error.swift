@@ -20,8 +20,9 @@ extension Version.Semantic {
     /// offending byte span within the parsed input — usable by
     /// IDE/tooling consumers for diagnostic highlighting.
     public enum Error: Swift.Error, Swift.Sendable, Swift.Hashable {
-        /// The version string contains non-ASCII characters. SemVer
-        /// 2.0.0 §9–§10 restrict identifiers to ASCII alphanumerics
+        /// The version string contains non-ASCII characters.
+        ///
+        /// SemVer 2.0.0 §9–§10 restrict identifiers to ASCII alphanumerics
         /// and hyphens.
         case nonASCIICharacters(input: Swift.String, range: Text.Range)
 
