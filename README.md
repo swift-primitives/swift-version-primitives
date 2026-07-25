@@ -79,7 +79,7 @@ dependencies: [
 | Type | Purpose |
 |------|---------|
 | `Version.Semantic.Phase` | `.initial` (MAJOR == 0 per SemVer §4) or `.stable` (MAJOR >= 1 per §5). Reach via `version.phase`. |
-| `Version.Semantic.Bumped` | Nested accessor producing the next version on each SemVer axis. Reach via `version.bumped.major / .minor / .patch` (per `[API-NAME-002]` — no compound `bumpedMajor()` method). |
+| `Version.Semantic.Bumped` | Nested accessor producing the next version on each SemVer axis. Reach via `version.bumped.major / .minor / .patch` (a nested accessor, not a compound `bumpedMajor()` method). |
 
 ### Per-version component types
 
@@ -113,10 +113,10 @@ byte-stream `Serializer` instead.
 
 ## Embedded Swift
 
-Version-primitives' own source follows the `[PKG-BUILD-007]`
-source-guard discipline: every Embedded-incompatible surface
+Version-primitives' own source follows a source-guard
+discipline: every Embedded-incompatible surface
 (`Codable`) is wrapped in `#if !hasFeature(Embedded)`. The package
-imports no Foundation per `[PRIM-FOUND-001]` and uses no
+imports no Foundation and uses no
 `_Concurrency` features. Building under
 `-Xswiftc -enable-experimental-feature -Xswiftc Embedded` is
 currently blocked by transitive dependencies that ship
@@ -144,7 +144,7 @@ implement the same spec — without depending on either.
 
 ## Foundation-clean
 
-Foundation-clean per `[PRIM-FOUND-001]`. Uses Swift
+Foundation-clean. Uses Swift
 standard-library types and the institute ASCII / Parser /
 Serializer primitives — never `Foundation.Data`, `Date`, etc.
 
