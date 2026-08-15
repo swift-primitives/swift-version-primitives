@@ -34,7 +34,9 @@ extension Version {
     /// v.patch             // nil — patch was absent in source
     /// v.description       // "6.3" — round-trips
     /// ```
-    public struct Tools: Swift.Sendable, Swift.Hashable, Swift.Comparable, Swift.CustomStringConvertible, Swift.LosslessStringConvertible {
+    public struct Tools: Swift.Sendable, Swift.Hashable, Swift.Comparable, Swift
+            .CustomStringConvertible, Swift.LosslessStringConvertible
+    {
         /// The MAJOR version component per SE-0152.
         public let major: Major.Value
 

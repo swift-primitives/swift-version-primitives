@@ -15,11 +15,12 @@
 // serialization in Embedded environments use
 // ``Version/Tools/Serializer`` directly.
 //
-// `Codable`'s protocol requirements force existential coder
-// parameters and untyped `throws`; both rules are deliberately
-// exempted for this file's conformance block.
+// `Codable`'s protocol requirements force existential coder parameters
+// and untyped `throws` at the exact `init(from:)`/`encode(to:)` witness
+// signatures below; both central rules already carve out that stdlib
+// witness position natively (swift-institute/.github#219), so no local
+// disable is needed here.
 
-// swiftlint:disable no_any_protocol_existential typed_throws_required
 #if !hasFeature(Embedded)
     extension Version.Tools: Codable {
         /// Decodes from the canonical SE-0152 string form.
@@ -45,4 +46,3 @@
         }
     }
 #endif
-// swiftlint:enable no_any_protocol_existential typed_throws_required

@@ -42,7 +42,9 @@ extension Version {
     /// Equality and comparison follow §11 precedence (build
     /// metadata is excluded per §10 — two versions differing only
     /// in build metadata compare equal and have the same hash).
-    public struct Semantic: Swift.Sendable, Swift.Hashable, Swift.Comparable, Swift.CustomStringConvertible {
+    public struct Semantic: Swift.Sendable, Swift.Hashable, Swift.Comparable, Swift
+            .CustomStringConvertible
+    {
         /// The MAJOR version component.
         ///
         /// Typed as ``Version/Semantic/Major/Value`` (a phantom-tagged

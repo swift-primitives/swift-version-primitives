@@ -29,23 +29,39 @@ extension Version.Semantic {
         /// The version core (the dot-separated MAJOR.MINOR.PATCH
         /// prefix) does not contain exactly three identifiers per
         /// SemVer 2.0.0 §2.
-        case invalidVersionCoreIdentifierCount(input: Swift.String, found: Swift.Int, range: Text.Range)
+        case invalidVersionCoreIdentifierCount(
+            input: Swift.String,
+            found: Swift.Int,
+            range: Text.Range
+        )
 
         /// A version-core identifier is empty, non-numeric, or
         /// contains a leading zero (SemVer 2.0.0 §2 forbids leading
         /// zeros in MAJOR, MINOR, PATCH).
-        case invalidVersionCoreIdentifier(input: Swift.String, identifier: Swift.String, range: Text.Range)
+        case invalidVersionCoreIdentifier(
+            input: Swift.String,
+            identifier: Swift.String,
+            range: Text.Range
+        )
 
         /// A pre-release identifier is empty per SemVer 2.0.0 §9.
         case emptyPreReleaseIdentifier(input: Swift.String, range: Text.Range)
 
         /// A pre-release identifier contains characters outside
         /// `[0-9A-Za-z-]` per SemVer 2.0.0 §9.
-        case invalidPreReleaseIdentifierCharacters(input: Swift.String, identifier: Swift.String, range: Text.Range)
+        case invalidPreReleaseIdentifierCharacters(
+            input: Swift.String,
+            identifier: Swift.String,
+            range: Text.Range
+        )
 
         /// A pre-release numeric identifier contains a leading zero
         /// per SemVer 2.0.0 §9.
-        case leadingZeroInNumericPreReleaseIdentifier(input: Swift.String, identifier: Swift.String, range: Text.Range)
+        case leadingZeroInNumericPreReleaseIdentifier(
+            input: Swift.String,
+            identifier: Swift.String,
+            range: Text.Range
+        )
 
         /// A build-metadata identifier is empty per SemVer 2.0.0
         /// §10.
@@ -53,7 +69,11 @@ extension Version.Semantic {
 
         /// A build-metadata identifier contains characters outside
         /// `[0-9A-Za-z-]` per SemVer 2.0.0 §10.
-        case invalidBuildMetadataIdentifierCharacters(input: Swift.String, identifier: Swift.String, range: Text.Range)
+        case invalidBuildMetadataIdentifierCharacters(
+            input: Swift.String,
+            identifier: Swift.String,
+            range: Text.Range
+        )
     }
 }
 

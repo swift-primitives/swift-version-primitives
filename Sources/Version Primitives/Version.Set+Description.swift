@@ -9,7 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Version.Set: Swift.CustomStringConvertible where Underlying: Swift.CustomStringConvertible {
+extension Version.Set: Swift.CustomStringConvertible
+where Underlying: Swift.CustomStringConvertible {
     /// A textual representation of this version-set using
     /// set-theoretic notation.
     ///
@@ -51,7 +52,8 @@ extension Version.Set: Swift.CustomStringConvertible where Underlying: Swift.Cus
     }
 }
 
-extension Version.Set: Swift.CustomDebugStringConvertible where Underlying: Swift.CustomStringConvertible {
+extension Version.Set: Swift.CustomDebugStringConvertible
+where Underlying: Swift.CustomStringConvertible {
     /// A structural representation preserving the case form and
     /// nested structure.
     ///

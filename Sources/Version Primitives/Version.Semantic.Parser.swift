@@ -85,14 +85,22 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
         if input.first == 0x2D {
             input = input[input.index(after: input.startIndex)...]
             offset += .one
-            preRelease = try Self.parsePreReleaseIdentifiers(&input, offset: &offset, original: originalString)
+            preRelease = try Self.parsePreReleaseIdentifiers(
+                &input,
+                offset: &offset,
+                original: originalString
+            )
         }
 
         var build: [Swift.String] = []
         if input.first == 0x2B {
             input = input[input.index(after: input.startIndex)...]
             offset += .one
-            build = try Self.parseBuildMetadataIdentifiers(&input, offset: &offset, original: originalString)
+            build = try Self.parseBuildMetadataIdentifiers(
+                &input,
+                offset: &offset,
+                original: originalString
+            )
         }
 
         return Version.Semantic(
@@ -118,7 +126,8 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
 
     @inlinable
     package static func isSemVerByte(_ byte: Byte) -> Swift.Bool {
-        ASCII.Classification.isAlphanumeric(byte.underlying) || byte == 0x2E || byte == 0x2D || byte == 0x2B
+        ASCII.Classification.isAlphanumeric(byte.underlying) || byte == 0x2E || byte == 0x2D
+            || byte == 0x2B
     }
 
     @inlinable
@@ -234,9 +243,14 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
                     range: range
                 )
             }
-            let allDigits = identifierSlice.allSatisfy { ASCII.Classification.isDigit($0.underlying) }
+            let allDigits = identifierSlice.allSatisfy {
+                ASCII.Classification.isDigit($0.underlying)
+            }
             if allDigits {
-                if identifierSlice.first == 0x30 && identifierSlice.index(after: identifierSlice.startIndex) < identifierSlice.endIndex {
+                if identifierSlice.first == 0x30
+                    && identifierSlice.index(after: identifierSlice.startIndex)
+                        < identifierSlice.endIndex
+                {
                     throw .leadingZeroInNumericPreReleaseIdentifier(
                         input: originalString,
                         identifier: text,

@@ -36,7 +36,9 @@ import Version_Primitives
 
     @Test
     func `Range set matches the interval`() {
-        let set: Version.Set<Version.Semantic> = .range(.upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0)))
+        let set: Version.Set<Version.Semantic> = .range(
+            .upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0))
+        )
         #expect(set.contains(Version.Semantic(major: 1, minor: 99, patch: 99)))
         #expect(!set.contains(Version.Semantic(major: 2, minor: 0, patch: 0)))
     }

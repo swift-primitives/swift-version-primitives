@@ -118,21 +118,26 @@ extension Version.Semantic.Test.Precedence {
     }
 
     @Test
-    func `Prerelease has lower precedence than release (SemVer §11.3)`() throws(Version.Semantic.Error) {
+    func `Prerelease has lower precedence than release (SemVer §11.3)`() throws(Version.Semantic
+        .Error)
+    {
         let pre = try Version.Semantic("1.0.0-alpha")
         let rel = try Version.Semantic("1.0.0")
         #expect(pre < rel)
     }
 
     @Test
-    func `Numeric prerelease has lower precedence than alphanumeric (SemVer §11.4)`() throws(Version.Semantic.Error) {
+    func `Numeric prerelease has lower precedence than alphanumeric (SemVer §11.4)`() throws(Version
+        .Semantic.Error)
+    {
         let num = try Version.Semantic("1.0.0-1")
         let alpha = try Version.Semantic("1.0.0-alpha")
         #expect(num < alpha)
     }
 
     @Test
-    func `Shorter prerelease wins on common prefix (SemVer §11.4)`() throws(Version.Semantic.Error) {
+    func `Shorter prerelease wins on common prefix (SemVer §11.4)`() throws(Version.Semantic.Error)
+    {
         let short = try Version.Semantic("1.0.0-alpha")
         let long = try Version.Semantic("1.0.0-alpha.1")
         #expect(short < long)

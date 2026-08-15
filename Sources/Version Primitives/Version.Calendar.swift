@@ -52,7 +52,9 @@ extension Version {
     /// at construction. MICRO has no canonical institute equivalent
     /// (its meaning is scheme-dependent) and is typed as a
     /// `Tagged<Micro, Swift.UInt>` for type discrimination.
-    public enum Calendar: Swift.Sendable, Swift.Hashable, Swift.Comparable, Swift.CustomStringConvertible, Swift.LosslessStringConvertible {
+    public enum Calendar: Swift.Sendable, Swift.Hashable, Swift.Comparable, Swift
+            .CustomStringConvertible, Swift.LosslessStringConvertible
+    {
         /// Year-only CalVer (e.g., Ubuntu's `2024`).
         case yearOnly(year: Time.Year, modifier: Swift.String? = nil)
 
@@ -60,7 +62,12 @@ extension Version {
         case yearMonth(year: Time.Year, month: Time.Month, modifier: Swift.String? = nil)
 
         /// Year + Month + Micro CalVer (e.g., `2026.05.13`).
-        case full(year: Time.Year, month: Time.Month, micro: Micro.Value, modifier: Swift.String? = nil)
+        case full(
+            year: Time.Year,
+            month: Time.Month,
+            micro: Micro.Value,
+            modifier: Swift.String? = nil
+        )
 
         /// Parses a CalVer per calver.org.
         ///
@@ -136,7 +143,9 @@ extension Version.Calendar {
     // Normalize to (year, month, micro, modifier) with absent
     // numeric components mapped to 0 — for comparison only.
     @usableFromInline
-    func normalized() -> (year: Swift.Int, month: Swift.Int, micro: Swift.Int, modifier: Swift.String?) {
+    func normalized() -> (
+        year: Swift.Int, month: Swift.Int, micro: Swift.Int, modifier: Swift.String?
+    ) {
         switch self {
         case .yearOnly(let y, let mod):
             return (y.rawValue, 0, 0, mod)

@@ -9,7 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Version.Range.Bound: Swift.CustomStringConvertible where Underlying: Swift.CustomStringConvertible {
+extension Version.Range.Bound: Swift.CustomStringConvertible
+where Underlying: Swift.CustomStringConvertible {
     /// A textual representation of this boundary.
     ///
     /// The case form is preserved — `unbounded`, `inclusive(v)`,
