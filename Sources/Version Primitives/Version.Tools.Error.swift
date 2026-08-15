@@ -31,7 +31,11 @@ extension Version.Tools {
 
         /// A numeric identifier is empty, non-numeric, or contains a
         /// leading zero.
-        case invalidToolsVersionIdentifier(input: Swift.String, identifier: Swift.String, range: Text.Range)
+        case invalidToolsVersionIdentifier(
+            input: Swift.String,
+            identifier: Swift.String,
+            range: Text.Range
+        )
     }
 }
 

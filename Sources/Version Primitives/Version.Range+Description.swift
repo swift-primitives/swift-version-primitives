@@ -9,7 +9,8 @@
 //
 // ===----------------------------------------------------------------------===//
 
-extension Version.Range: Swift.CustomStringConvertible where Underlying: Swift.CustomStringConvertible {
+extension Version.Range: Swift.CustomStringConvertible
+where Underlying: Swift.CustomStringConvertible {
     /// A textual representation of this range using mathematical
     /// interval notation.
     ///

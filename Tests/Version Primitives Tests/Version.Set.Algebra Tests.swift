@@ -65,7 +65,9 @@ import Version_Primitives
     @Test
     func `Intersection of exact and range`() {
         let v = Version.Semantic(major: 1, minor: 5, patch: 0)
-        let range: Version.Set<Version.Semantic> = .range(.upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0)))
+        let range: Version.Set<Version.Semantic> = .range(
+            .upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0))
+        )
         let exact: Version.Set<Version.Semantic> = .exact(v)
         let intersected = exact.intersection(range)
         #expect(intersected == .exact(v))
@@ -74,7 +76,9 @@ import Version_Primitives
     @Test
     func `Intersection of disjoint exact and range is empty`() {
         let outside = Version.Semantic(major: 2, minor: 5, patch: 0)
-        let range: Version.Set<Version.Semantic> = .range(.upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0)))
+        let range: Version.Set<Version.Semantic> = .range(
+            .upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0))
+        )
         let exact: Version.Set<Version.Semantic> = .exact(outside)
         #expect(exact.intersection(range) == .empty)
     }

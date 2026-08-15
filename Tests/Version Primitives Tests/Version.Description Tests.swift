@@ -68,7 +68,9 @@ extension VersionDescriptionTests.Range {
 
     @Test
     func `Half-open caret range prints canonical form`() {
-        let range = Version.Range<Version.Semantic>.upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0))
+        let range = Version.Range<Version.Semantic>.upToNextMajor(
+            from: Version.Semantic(major: 1, minor: 0, patch: 0)
+        )
         #expect(range.description == "[1.0.0, 2.0.0)")
     }
 
@@ -122,7 +124,9 @@ extension VersionDescriptionTests.Set {
 
     @Test
     func `Range delegates description, labels in debug`() {
-        let interval = Version.Range<Version.Semantic>.upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0))
+        let interval = Version.Range<Version.Semantic>.upToNextMajor(
+            from: Version.Semantic(major: 1, minor: 0, patch: 0)
+        )
         let set: Version.Set<Version.Semantic> = .range(interval)
         #expect(set.description == "[1.0.0, 2.0.0)")
         #expect(set.debugDescription == ".range([1.0.0, 2.0.0))")
@@ -193,7 +197,9 @@ extension VersionDescriptionTests.Calendar {
     }
 
     @Test
-    func `Debug distinguishes scheme identity that description erases`() throws(Version.Calendar.Error) {
+    func `Debug distinguishes scheme identity that description erases`() throws(Version.Calendar
+        .Error)
+    {
         // 2026.05 (yearMonth) and 2026.05.0 (full) produce the same
         // normalized tuple but the debug form preserves the scheme.
         let yearMonth = try Version.Calendar(parsing: "2026.05")

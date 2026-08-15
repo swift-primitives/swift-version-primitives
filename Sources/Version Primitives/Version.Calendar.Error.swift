@@ -23,7 +23,11 @@ extension Version.Calendar {
         case nonASCIICharacters(input: Swift.String, range: Text.Range)
 
         /// A numeric identifier is empty or non-numeric.
-        case invalidCalendarIdentifier(input: Swift.String, identifier: Swift.String, range: Text.Range)
+        case invalidCalendarIdentifier(
+            input: Swift.String,
+            identifier: Swift.String,
+            range: Text.Range
+        )
 
         /// The MONTH numeric value is outside the 1–12 range
         /// enforced by `Time.Month`.
@@ -35,7 +39,11 @@ extension Version.Calendar {
 
         /// The modifier suffix contains characters outside
         /// `[0-9A-Za-z-]`.
-        case invalidModifierCharacters(input: Swift.String, modifier: Swift.String, range: Text.Range)
+        case invalidModifierCharacters(
+            input: Swift.String,
+            modifier: Swift.String,
+            range: Text.Range
+        )
     }
 }
 

@@ -68,8 +68,12 @@ import Version_Primitives
 
     @Test
     func `Disjoint ranges intersect to empty`() {
-        let a = Version.Range<Version.Semantic>.upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0))
-        let b = Version.Range<Version.Semantic>.upToNextMajor(from: Version.Semantic(major: 3, minor: 0, patch: 0))
+        let a = Version.Range<Version.Semantic>.upToNextMajor(
+            from: Version.Semantic(major: 1, minor: 0, patch: 0)
+        )
+        let b = Version.Range<Version.Semantic>.upToNextMajor(
+            from: Version.Semantic(major: 3, minor: 0, patch: 0)
+        )
         // Version.Range.intersection, not Swift.Set.intersection.
         // swiftlint:disable:next is_disjoint
         #expect(a.intersection(b).isEmpty)
@@ -78,7 +82,9 @@ import Version_Primitives
 
     @Test
     func `Strict subset detected — caret 1 inside 1-3`() {
-        let inner = Version.Range<Version.Semantic>.upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0))
+        let inner = Version.Range<Version.Semantic>.upToNextMajor(
+            from: Version.Semantic(major: 1, minor: 0, patch: 0)
+        )
         let outer = Version.Range<Version.Semantic>(
             lowerBound: .inclusive(Version.Semantic(major: 1, minor: 0, patch: 0)),
             upperBound: .exclusive(Version.Semantic(major: 3, minor: 0, patch: 0))
@@ -91,7 +97,9 @@ import Version_Primitives
 
     @Test
     func `Identical ranges are mutual subsets`() {
-        let r = Version.Range<Version.Semantic>.upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0))
+        let r = Version.Range<Version.Semantic>.upToNextMajor(
+            from: Version.Semantic(major: 1, minor: 0, patch: 0)
+        )
         #expect(r.isSubset(of: r))
         #expect(r.isSuperset(of: r))
         #expect(r.contains(r))
@@ -104,7 +112,9 @@ import Version_Primitives
             upperBound: .exclusive(Version.Semantic(major: 1, minor: 0, patch: 0))
         )
         let any: Version.Range<Version.Semantic> = .all
-        let caret = Version.Range<Version.Semantic>.upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0))
+        let caret = Version.Range<Version.Semantic>.upToNextMajor(
+            from: Version.Semantic(major: 1, minor: 0, patch: 0)
+        )
         #expect(empty.isSubset(of: any))
         #expect(empty.isSubset(of: caret))
         #expect(empty.isSubset(of: empty))
@@ -113,7 +123,9 @@ import Version_Primitives
     @Test
     func `Unbounded is superset of any bounded range`() {
         let any: Version.Range<Version.Semantic> = .all
-        let caret = Version.Range<Version.Semantic>.upToNextMajor(from: Version.Semantic(major: 1, minor: 0, patch: 0))
+        let caret = Version.Range<Version.Semantic>.upToNextMajor(
+            from: Version.Semantic(major: 1, minor: 0, patch: 0)
+        )
         #expect(any.isSuperset(of: caret))
         #expect(caret.isSubset(of: any))
         #expect(!any.isSubset(of: caret))

@@ -53,7 +53,9 @@ import Version_Primitives
 
     @Test
     func `upToNextMajor caret semantics`() {
-        let range: Version.Range<Version.Semantic> = .upToNextMajor(from: Version.Semantic(major: 1, minor: 2, patch: 3))
+        let range: Version.Range<Version.Semantic> = .upToNextMajor(
+            from: Version.Semantic(major: 1, minor: 2, patch: 3)
+        )
         #expect(range.contains(Version.Semantic(major: 1, minor: 2, patch: 3)))
         #expect(range.contains(Version.Semantic(major: 1, minor: 99, patch: 99)))
         #expect(!range.contains(Version.Semantic(major: 2, minor: 0, patch: 0)))
@@ -62,7 +64,9 @@ import Version_Primitives
 
     @Test
     func `upToNextMinor tilde semantics`() {
-        let range: Version.Range<Version.Semantic> = .upToNextMinor(from: Version.Semantic(major: 1, minor: 2, patch: 3))
+        let range: Version.Range<Version.Semantic> = .upToNextMinor(
+            from: Version.Semantic(major: 1, minor: 2, patch: 3)
+        )
         #expect(range.contains(Version.Semantic(major: 1, minor: 2, patch: 3)))
         #expect(range.contains(Version.Semantic(major: 1, minor: 2, patch: 99)))
         #expect(!range.contains(Version.Semantic(major: 1, minor: 3, patch: 0)))
