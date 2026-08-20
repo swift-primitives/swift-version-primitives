@@ -14,7 +14,7 @@ public import Buffer_Linear_Primitive
 public import Buffer_Linear_Primitives
 public import Byte_Parser_Primitives
 public import Ownership_Shared_Primitive
-public import Parser_Primitives
+internal import Parser_Primitives
 
 extension Version.Tools: Parseable {
     /// Pin the `Parseable.Parser` associatedtype to the canonical

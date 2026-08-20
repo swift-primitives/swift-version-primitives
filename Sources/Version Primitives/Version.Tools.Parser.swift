@@ -11,10 +11,10 @@
 
 public import ASCII_Decimal_Parser_Primitives
 public import ASCII_Primitives
-public import Byte_Parser_Primitives
-public import Byte_Primitives
+internal import Byte_Parser_Primitives
+internal import Byte_Primitives
 internal import Byte_Primitives_Standard_Library_Integration
-public import Collection_Primitives
+internal import Collection_Primitives
 internal import Ordinal_Primitives
 public import Parser_Primitives
 public import Text_Primitives
@@ -24,7 +24,7 @@ extension Version.Tools {
     ///
     /// Conforms to `Parser_Primitives.Parser.\`Protocol\`` so the
     /// type can be composed inside larger byte-stream grammars
-    /// (typically a Package.swift `// swift-tools-version: 6.3`
+    /// (typically a Package.swift `// swift-tools-version: 6.4`
     /// comment scanner).
     public struct Parser<Input: Collection.Slice.`Protocol`>: Swift.Sendable
     where Input: Swift.Sendable, Input.Element == Byte {

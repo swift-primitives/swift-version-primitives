@@ -20,11 +20,9 @@ extension Version.Semantic.Error {
             do {
                 _ = try Version.Semantic("01.0.0")
                 Issue.record("expected throw")
-            } catch let error as Version.Semantic.Error {
+            } catch let error {
                 #expect(error.range.start.underlying.rawValue == 0)
                 #expect(error.range.end.underlying.rawValue == 2)
-            } catch {
-                Issue.record("unexpected error: \(error)")
             }
         }
 
@@ -33,10 +31,8 @@ extension Version.Semantic.Error {
             do {
                 _ = try Version.Semantic("1.2")
                 Issue.record("expected throw")
-            } catch let error as Version.Semantic.Error {
+            } catch let error {
                 #expect(error.range.start.underlying.rawValue == 3)
-            } catch {
-                Issue.record("unexpected error: \(error)")
             }
         }
 
@@ -47,11 +43,9 @@ extension Version.Semantic.Error {
             do {
                 _ = try Version.Semantic("1.0.0-α")
                 Issue.record("expected throw")
-            } catch let error as Version.Semantic.Error {
+            } catch let error {
                 #expect(error.range.start.underlying.rawValue == 6)
                 #expect(error.range.end.underlying.rawValue == 7)
-            } catch {
-                Issue.record("unexpected error: \(error)")
             }
         }
 
@@ -60,13 +54,11 @@ extension Version.Semantic.Error {
             do {
                 _ = try Version.Semantic("1.2.3.4")
                 Issue.record("expected throw")
-            } catch let error as Version.Semantic.Error {
+            } catch let error {
                 // Parser consumes "1.2.3" (5 bytes). Trailing ".4"
                 // begins at offset 5 and runs to offset 7.
                 #expect(error.range.start.underlying.rawValue == 5)
                 #expect(error.range.end.underlying.rawValue == 7)
-            } catch {
-                Issue.record("unexpected error: \(error)")
             }
         }
 
@@ -75,11 +67,9 @@ extension Version.Semantic.Error {
             do {
                 _ = try Version.Semantic("1.0.0-")
                 Issue.record("expected throw")
-            } catch let error as Version.Semantic.Error {
+            } catch let error {
                 // Pre-release segment starts after the '-' at offset 6.
                 #expect(error.range.start.underlying.rawValue == 6)
-            } catch {
-                Issue.record("unexpected error: \(error)")
             }
         }
     }
