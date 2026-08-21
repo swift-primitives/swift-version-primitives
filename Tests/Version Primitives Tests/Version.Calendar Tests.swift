@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Testing
 import Time_Primitives
 import Version_Primitives
@@ -87,10 +76,10 @@ extension Version.Calendar.Test.Comparison {
     func `Different schemes compare numerically with zero-fill`() throws(Version.Calendar.Error) {
         let yearMonth = try Version.Calendar(parsing: "2026.05")
         let full = try Version.Calendar(parsing: "2026.05.0")
-        // Same normalized tuple — neither orders before the other.
+
         #expect(!(yearMonth < full))
         #expect(!(full < yearMonth))
-        // But scheme identity makes them non-equal.
+
         #expect(yearMonth != full)
     }
 }

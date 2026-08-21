@@ -1,19 +1,5 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 extension Version.Set {
-    /// Whether this set contains zero versions.
-    ///
-    /// Intensional check — does not enumerate the set; computes
-    /// emptiness from the case structure alone.
+
     @inlinable
     public var isEmpty: Swift.Bool {
         switch self {
@@ -34,18 +20,6 @@ extension Version.Set {
         }
     }
 
-    /// A canonical form of this set with no redundant structure.
-    ///
-    /// Normalization rules:
-    /// - `.union([])` → `.empty`
-    /// - `.union([s])` → `s.normalized`
-    /// - Nested `.union(.union(...))` flattens
-    /// - Empty members are dropped from unions
-    /// - `.any` inside a union collapses the union to `.any`
-    /// - `.range` with an empty interval collapses to `.empty`
-    ///
-    /// Two semantically-equal sets compare equal after
-    /// normalization. Useful before `Hashable`-based deduplication.
     @inlinable
     public func normalized() -> Self {
         switch self {
@@ -81,21 +55,11 @@ extension Version.Set {
         }
     }
 
-    /// The union of this set with `other`.
-    ///
-    /// Returns the disjunctive combination — versions in either
-    /// input — normalized to canonical form. Equivalent to
-    /// `.union([self, other]).normalized()` but avoids the
-    /// intermediate value.
     @inlinable
     public func union(_ other: Self) -> Self {
         Self.union([self, other]).normalized()
     }
 
-    /// The intersection of this set with `other`.
-    ///
-    /// Returns the conjunctive combination — versions in both
-    /// inputs — in canonical form.
     @inlinable
     public func intersection(_ other: Self) -> Self {
         switch (self, other) {

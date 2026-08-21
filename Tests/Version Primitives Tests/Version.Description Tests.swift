@@ -1,21 +1,6 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Testing
 import Version_Primitives
 
-// NOTE: `Version.Range.Bound` is nested in the generic `Version.Range<Underlying>`,
-// so it MUST use the [SWIFT-TEST-003] parallel namespace pattern (the
-// [SWIFT-TEST-002] extension pattern is a hard compiler error / silent
-// non-discovery for generic-nested types).
 @Suite struct `Version.Range.Bound Tests` {
     @Test
     func `Unbounded prints as 'unbounded'`() {
@@ -38,12 +23,6 @@ import Version_Primitives
     }
 }
 
-// NOTE: `VersionDescriptionTests` groups description/debugDescription coverage
-// across five unrelated host types (Version.Range.Bound, Version.Range,
-// Version.Set, Version.Semantic.Phase, Version.Calendar) with no single
-// tested type of its own — [SWIFT-TEST-002] tested-type resolution is
-// UNRESOLVABLE for this container. Left as adjudication residue; only the
-// compound-named `RangeBound` member (above) was mechanically resolvable.
 @Suite("Description / DebugDescription")
 struct VersionDescriptionTests {
     @Suite struct Range {}
@@ -200,8 +179,7 @@ extension VersionDescriptionTests.Calendar {
     func `Debug distinguishes scheme identity that description erases`() throws(Version.Calendar
         .Error)
     {
-        // 2026.05 (yearMonth) and 2026.05.0 (full) produce the same
-        // normalized tuple but the debug form preserves the scheme.
+
         let yearMonth = try Version.Calendar(parsing: "2026.05")
         let full = try Version.Calendar(parsing: "2026.05.0")
         #expect(yearMonth.debugDescription != full.debugDescription)

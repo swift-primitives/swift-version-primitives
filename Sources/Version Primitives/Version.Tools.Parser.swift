@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 public import ASCII_Decimal_Parser_Primitives
 public import ASCII_Primitives
 internal import Byte_Parser_Primitives
@@ -20,28 +9,21 @@ public import Parser_Primitives
 public import Text_Primitives
 
 extension Version.Tools {
-    /// Byte-stream parser for SE-0152 tools versions.
-    ///
-    /// Conforms to `Parser_Primitives.Parser.\`Protocol\`` so the
-    /// type can be composed inside larger byte-stream grammars
-    /// (typically a Package.swift `// swift-tools-version: 6.4`
-    /// comment scanner).
+
     public struct Parser<Input: Collection.Slice.`Protocol`>: Swift.Sendable
     where Input: Swift.Sendable, Input.Element == Byte {
-        /// Creates a tools-version byte-stream parser.
+
         @inlinable
         public init() {}
     }
 }
 
 extension Version.Tools.Parser: Parser_Primitives.Parser.`Protocol` {
-    /// The parsed value: a validated ``Version/Tools``.
+
     public typealias Output = Version.Tools
 
-    /// The error type thrown on parse failure: ``Version/Tools/Error``.
     public typealias Failure = Version.Tools.Error
 
-    /// Consumes an SE-0152 tools-version token from `input`.
     public func parse(_ input: inout Input) throws(Version.Tools.Error) -> Version.Tools {
         let originalSlice = input[input.startIndex..<Self.findToolsVersionEnd(in: input)]
         let originalString = Swift.String(decoding: originalSlice, as: Swift.UTF8.self)

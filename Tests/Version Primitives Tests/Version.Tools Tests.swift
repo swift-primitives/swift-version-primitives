@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Testing
 import Version_Primitives
 
@@ -61,7 +50,7 @@ extension Version.Tools.Test.Comparison {
         let zeroed = try Version.Tools(parsing: "6.3.0")
         #expect(!(bare < zeroed))
         #expect(!(zeroed < bare))
-        // But they are NOT equal — equality preserves the patch-absence flag.
+
         #expect(bare != zeroed)
     }
 

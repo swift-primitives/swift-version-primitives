@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Byte_Parser_Primitives
 import Parser_Primitives
 import Testing
@@ -37,8 +26,8 @@ import Version_Primitives
         var input = Byte.Input(utf8: "1.2.3 trailing")
         let version = try Version.Semantic.Parser().parse(&input)
         #expect(version.major == 1)
-        // The space and trailing bytes remain in the input slice.
-        #expect(input.first == 0x20)  // ' '
+
+        #expect(input.first == 0x20)
     }
 
     @Test

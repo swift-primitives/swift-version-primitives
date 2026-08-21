@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 public import Byte_Parser_Primitives
 internal import Byte_Primitives_Standard_Library_Integration
 internal import Parser_Primitives
@@ -16,40 +5,17 @@ public import Tagged_Primitives
 public import Text_Primitives
 
 extension Version {
-    /// Swift Package Manager tools version per SE-0152.
-    ///
-    /// Format: `MAJOR.MINOR[.PATCH]`. PATCH is optional and
-    /// defaults to 0 when absent in source — but the absence is
-    /// preserved on the typed value so round-tripping through
-    /// description produces the original spelling.
-    ///
-    /// `Version.Tools` is a strict SemVer subset (no pre-release,
-    /// no build-metadata). Comparison is purely numeric on
-    /// `(major, minor, patch ?? 0)`.
-    ///
-    /// ```swift
-    /// let v = try Version.Tools(parsing: "6.3")
-    /// v.major.underlying  // 6
-    /// v.minor.underlying  // 3
-    /// v.patch             // nil — patch was absent in source
-    /// v.description       // "6.3" — round-trips
-    /// ```
+
     public struct Tools: Swift.Sendable, Swift.Hashable, Swift.Comparable, Swift
             .CustomStringConvertible, Swift.LosslessStringConvertible
     {
-        /// The MAJOR version component per SE-0152.
+
         public let major: Major.Value
 
-        /// The MINOR version component per SE-0152.
         public let minor: Minor.Value
 
-        /// The PATCH version component per SE-0152.
-        ///
-        /// `nil` when absent in source. For comparison purposes
-        /// `nil` is treated identically to `0`.
         public let patch: Patch.Value?
 
-        /// Constructs a tools-version from its components.
         @inlinable
         public init(
             major: Major.Value,
@@ -61,10 +27,6 @@ extension Version {
             self.patch = patch
         }
 
-        /// Parses a tools-version per SE-0152.
-        ///
-        /// - Throws: ``Version/Tools/Error`` cases describing
-        ///   which spec rule the input violated.
         public init(parsing toolsString: Swift.String) throws(Version.Tools.Error) {
             let totalBytes = Swift.UInt(toolsString.utf8.count)
             for (offset, byte) in toolsString.utf8.enumerated() where byte >= 0x80 {
@@ -89,8 +51,6 @@ extension Version {
             }
         }
 
-        /// `LosslessStringConvertible` conformance — failable shim
-        /// around ``Version/Tools/init(parsing:)``.
         @inlinable
         public init?(_ description: Swift.String) {
             do throws(Version.Tools.Error) {
@@ -103,16 +63,13 @@ extension Version {
 }
 
 extension Version.Tools {
-    /// Canonical SE-0152 spelling.
-    ///
-    /// PATCH is rendered only when the source had it.
+
     public var description: Swift.String {
         var buffer: [Byte] = []
         Version.Tools.Serializer<[Byte]>().serialize(self, into: &buffer)
         return Swift.String(decoding: buffer, as: Swift.UTF8.self)
     }
 
-    /// SE-0152 precedence: numeric on `(major, minor, patch ?? 0)`.
     @inlinable
     public static func < (lhs: Self, rhs: Self) -> Swift.Bool {
         if lhs.major != rhs.major { return lhs.major < rhs.major }

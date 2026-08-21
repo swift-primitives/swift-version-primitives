@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Testing
 import Version_Primitives
 
@@ -59,7 +48,7 @@ import Version_Primitives
             upperBound: .exclusive(Version.Semantic(major: 3, minor: 0, patch: 0))
         )
         let intersected = a.intersection(b)
-        // [1.5.0, 2.0.0)
+
         #expect(intersected.contains(Version.Semantic(major: 1, minor: 5, patch: 0)))
         #expect(intersected.contains(Version.Semantic(major: 1, minor: 99, patch: 99)))
         #expect(!intersected.contains(Version.Semantic(major: 1, minor: 4, patch: 99)))
@@ -74,8 +63,7 @@ import Version_Primitives
         let b = Version.Range<Version.Semantic>.upToNextMajor(
             from: Version.Semantic(major: 3, minor: 0, patch: 0)
         )
-        // Version.Range.intersection, not Swift.Set.intersection.
-        // swiftlint:disable:next is_disjoint
+
         #expect(a.intersection(b).isEmpty)
         #expect(!a.overlaps(b))
     }
@@ -135,18 +123,17 @@ import Version_Primitives
     func `Inclusive vs exclusive boundary distinguishes coverage`() {
         let one = Version.Semantic(major: 1, minor: 0, patch: 0)
         let two = Version.Semantic(major: 2, minor: 0, patch: 0)
-        // [1.0.0, 2.0.0)
+
         let halfOpen = Version.Range<Version.Semantic>(
             lowerBound: .inclusive(one),
             upperBound: .exclusive(two)
         )
-        // (1.0.0, 2.0.0]
+
         let openClosed = Version.Range<Version.Semantic>(
             lowerBound: .exclusive(one),
             upperBound: .inclusive(two)
         )
-        // Neither is a subset of the other — boundary versions
-        // differ on each side.
+
         #expect(!halfOpen.isSubset(of: openClosed))
         #expect(!openClosed.isSubset(of: halfOpen))
     }

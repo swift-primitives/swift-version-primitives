@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 public import ASCII_Decimal_Parser_Primitives
 public import ASCII_Primitives
 internal import Byte_Parser_Primitives
@@ -19,57 +8,21 @@ public import Parser_Primitives
 public import Text_Primitives
 
 extension Version.Semantic {
-    /// Byte-stream parser for SemVer 2.0.0 — participates in larger
-    /// `Parser_Primitives.Parser.\`Protocol\``-bound grammars.
-    ///
-    /// Composes with the institute parser ecosystem (HTTP header
-    /// parsers, package-manifest parsers, registry-locator parsers)
-    /// that operate on `UInt8` byte streams. Inside its `parse(_:)`
-    /// body the Parser delegates to ``ASCII/Decimal/Parser`` for each
-    /// numeric component and to ``ASCII/Classification`` predicates
-    /// for identifier character-class checks — there is no
-    /// hand-rolled byte arithmetic.
-    ///
-    /// Errors thrown by the Parser carry `Text.Range` spans locating
-    /// the offending byte run, suitable for IDE / tooling
-    /// highlighting.
-    ///
-    /// The Parser is the canonical source of SemVer validation
-    /// logic. ``Version/Semantic/init(parsing:)`` is a thin String
-    /// adapter that runs this parser over the UTF-8 view of the
-    /// supplied string and asserts the input is exhausted.
-    ///
-    /// ```swift
-    /// var input = Byte.Input(utf8: "1.2.3-alpha+sha.abc")
-    /// let version = try Version.Semantic.Parser().parse(&input)
-    /// // version.major.underlying == 1
-    /// ```
+
     public struct Parser<Input: Collection.Slice.`Protocol`>: Swift.Sendable
     where Input: Swift.Sendable, Input.Element == Byte {
-        /// Creates a SemVer 2.0.0 byte-stream parser.
-        ///
-        /// Stateless — instances are interchangeable.
+
         @inlinable
         public init() {}
     }
 }
 
 extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
-    /// The parsed value: a validated ``Version/Semantic``.
+
     public typealias Output = Version.Semantic
 
-    /// The error type thrown on parse failure: ``Version/Semantic/Error``.
     public typealias Failure = Version.Semantic.Error
 
-    /// Consumes a SemVer 2.0.0 token from `input` and returns the
-    /// parsed ``Version/Semantic``.
-    ///
-    /// The parser is greedy over the SemVer character class
-    /// (`[0-9A-Za-z.+-]`) and stops at the first byte outside that
-    /// class. Validation against §2/§9/§10 is performed inline;
-    /// failures throw ``Version/Semantic/Error`` with the
-    /// surrounding context and a `Text.Range` locating the offending
-    /// byte span.
     public func parse(_ input: inout Input) throws(Version.Semantic.Error) -> Version.Semantic {
         let originalSlice = input[input.startIndex..<Self.findSemVerEnd(in: input)]
         let originalString = Swift.String(decoding: originalSlice, as: Swift.UTF8.self)
@@ -112,9 +65,6 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
         )
     }
 
-    // Locates the end of the greedy SemVer character run for error-
-    // context reconstruction. Does not advance `input` — `parse(_:)`
-    // does that via the per-component sub-parsers.
     @usableFromInline
     static func findSemVerEnd(in input: Input) -> Input.Index {
         var i = input.startIndex
@@ -135,7 +85,6 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
         Text.Range(start: start.retag(Text.self), end: end.retag(Text.self))
     }
 
-    // §2 — MAJOR / MINOR / PATCH: numeric, no leading zeros.
     @usableFromInline
     static func parseCoreNumber(
         _ input: inout Input,
@@ -181,9 +130,6 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
         return value
     }
 
-    // Expects exactly the given delimiter byte at the head of input
-    // and advances past it. Reports the dot-count error when the
-    // core's three-identifier structure is violated.
     @usableFromInline
     static func consumeDelimiter(
         _ byte: Byte,
@@ -202,9 +148,6 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
         offset += .one
     }
 
-    // Counts dot-separated segments in the version-core portion
-    // (the prefix before any '-' or '+'). Populates the §2 dot-count
-    // error's `found` parameter.
     @usableFromInline
     static func countCoreParts(in original: Swift.String) -> Swift.Int {
         var count = 1
@@ -215,9 +158,6 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
         return count
     }
 
-    // §9 — pre-release: identifier ("." identifier)*. Each
-    // identifier is non-empty, character class `[0-9A-Za-z-]`. A
-    // purely-numeric identifier additionally rejects leading zeros.
     @usableFromInline
     static func parsePreReleaseIdentifiers(
         _ input: inout Input,
@@ -272,9 +212,6 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
         return identifiers
     }
 
-    // §10 — build metadata: identifier ("." identifier)*. Same
-    // character class as §9 but no numeric/alphanumeric split and
-    // no leading-zero rule.
     @usableFromInline
     static func parseBuildMetadataIdentifiers(
         _ input: inout Input,
@@ -304,10 +241,6 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
         return identifiers
     }
 
-    // Consumes a maximal run of bytes up to (but not including) the
-    // next '.' or '+'. The caller validates the character class on
-    // the returned slice — this scanner is permissive so callers
-    // can surface the specific spec-section's error case.
     @usableFromInline
     static func takeIdentifier(_ input: inout Input, offset: inout Index<Byte>) -> Input {
         let startIndex = input.startIndex
@@ -328,8 +261,6 @@ extension Version.Semantic.Parser: Parser_Primitives.Parser.`Protocol` {
         ASCII.Classification.isAlphanumeric(byte.underlying) || byte == 0x2D
     }
 
-    // Advances past a leading '.' if present. Chains dot-separated
-    // identifiers inside pre-release and build-metadata segments.
     @usableFromInline
     static func consumeIfDot(_ input: inout Input, offset: inout Index<Byte>) -> Swift.Bool {
         if input.first == 0x2E {

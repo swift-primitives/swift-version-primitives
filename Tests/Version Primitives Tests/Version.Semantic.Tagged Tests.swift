@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Testing
 import Version_Primitives
 
@@ -34,10 +23,7 @@ extension Version.Semantic.Test {
 
         @Test
         func `Tag namespaces are type-distinct`() {
-            // Compile-time witness: each component has its own type.
-            // This test exists so the assertion is exercised at runtime
-            // and so a regression that collapsed the tag distinction
-            // would surface via a metatype-equality failure.
+
             #expect(Version.Semantic.Major.Value.self != Version.Semantic.Minor.Value.self)
             #expect(Version.Semantic.Minor.Value.self != Version.Semantic.Patch.Value.self)
             #expect(Version.Semantic.Major.Value.self != Version.Semantic.Patch.Value.self)

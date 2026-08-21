@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Testing
 import Version_Primitives
 
@@ -95,9 +84,7 @@ import Version_Primitives
     func `Union of two exacts at same version normalizes to single exact`() {
         let v = Version.Semantic(major: 1, minor: 0, patch: 0)
         let combined = (Version.Set<Version.Semantic>.exact(v)).union(.exact(v))
-        // Note: union doesn't deduplicate by value, only flattens nesting.
-        // Two distinct .exact wrappers around the same value still produce a 2-member union.
-        // This test documents the current behavior — dedup would be a future refinement.
+
         guard case .union(let members) = combined else {
             Issue.record("expected union")
             return

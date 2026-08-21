@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Testing
 import Version_Primitives
 
@@ -40,10 +29,7 @@ extension Version.Tools.Test {
 
         @Test
         func `Tag namespaces are type-distinct`() {
-            // Compile-time witness: each tools component has its own
-            // type. The runtime metatype-equality assertion catches a
-            // regression that collapsed the tag distinction (e.g.,
-            // accidentally typealiasing Patch.Value to Minor.Value).
+
             #expect(Version.Tools.Major.Value.self != Version.Tools.Minor.Value.self)
             #expect(Version.Tools.Minor.Value.self != Version.Tools.Patch.Value.self)
             #expect(Version.Tools.Major.Value.self != Version.Tools.Patch.Value.self)
@@ -51,10 +37,7 @@ extension Version.Tools.Test {
 
         @Test
         func `Tools components are distinct from Semantic components`() {
-            // Cross-kind type discrimination: a Tools.Major.Value
-            // cannot be confused with a Semantic.Major.Value at the
-            // type level, even though both wrap UInt with a "Major"
-            // role.
+
             #expect(Version.Tools.Major.Value.self != Version.Semantic.Major.Value.self)
             #expect(Version.Tools.Minor.Value.self != Version.Semantic.Minor.Value.self)
             #expect(Version.Tools.Patch.Value.self != Version.Semantic.Patch.Value.self)

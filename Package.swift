@@ -2,32 +2,6 @@
 
 import PackageDescription
 
-// Version Primitives — L1 typed versioning primitives.
-//
-// Provides typed representations of versioning specifications. At
-// v1.0.0, the only inhabitant is Semantic Versioning 2.0.0
-// (semver.org), exposed as `Version.Semantic` — a struct that
-// validates at construction time per the spec's character-class and
-// structure rules.
-//
-// Per the typed-identifier-naming framework (swift-institute/Research/
-// 2026-05-12-typed-identifier-naming-framework.md), the namespace is
-// the most-generic English noun — `Version` — rather than a
-// spec-flavored `SemVer.*` namespace. Future versioning kinds nest
-// additively: `Version.Calendar` (CalVer), `Version.Tools` (SwiftPM
-// tools-version subset), etc. The `SemVer` typealias is permitted
-// post-v1.0.0 as additive convenience per framework Axiom 1's
-// typealias carve-out, but the primary declaration is
-// `Version.Semantic`.
-//
-// Cross-ecosystem reuse is the whole point: NPM bridges, Cargo
-// bridges, registry tooling, release automation, and the Swift
-// Package Index all consume the same `Version.Semantic` because
-// SemVer 2.0.0 is the same spec across ecosystems.
-//
-// Design Research at swift-institute/Research/
-// 2026-05-12-swift-package-and-version-primitives-design.md v1.0.0.
-
 let package = Package(
     name: "swift-version-primitives",
     platforms: [

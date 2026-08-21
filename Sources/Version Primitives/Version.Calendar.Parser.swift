@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 public import ASCII_Decimal_Parser_Primitives
 public import ASCII_Primitives
 internal import Byte_Parser_Primitives
@@ -21,37 +10,21 @@ public import Text_Primitives
 internal import Time_Primitives
 
 extension Version.Calendar {
-    /// Byte-stream parser for CalVer.
-    ///
-    /// Greedy over the CalVer character class
-    /// (`[0-9A-Za-z.-]`). Distinguishes the three CalVer schemes
-    /// (yearOnly, yearMonth, full) by the number of dot-separated
-    /// numeric components consumed before any modifier.
+
     public struct Parser<Input: Collection.Slice.`Protocol`>: Swift.Sendable
     where Input: Swift.Sendable, Input.Element == Byte {
-        /// Creates a CalVer byte-stream parser.
-        ///
-        /// Stateless — instances are interchangeable.
+
         @inlinable
         public init() {}
     }
 }
 
 extension Version.Calendar.Parser: Parser_Primitives.Parser.`Protocol` {
-    /// The parsed value: a validated ``Version/Calendar``.
+
     public typealias Output = Version.Calendar
 
-    /// The error type thrown on parse failure: ``Version/Calendar/Error``.
     public typealias Failure = Version.Calendar.Error
 
-    /// Consumes a CalVer token from `input` and returns the parsed
-    /// ``Version/Calendar`` value.
-    ///
-    /// Distinguishes ``Version/Calendar/yearOnly(year:modifier:)``,
-    /// ``Version/Calendar/yearMonth(year:month:modifier:)``, and
-    /// ``Version/Calendar/full(year:month:micro:modifier:)`` by the
-    /// number of dot-separated numeric components consumed before
-    /// the optional modifier suffix.
     public func parse(_ input: inout Input) throws(Version.Calendar.Error) -> Version.Calendar {
         let originalSlice = input[input.startIndex..<Self.findCalendarEnd(in: input)]
         let originalString = Swift.String(decoding: originalSlice, as: Swift.UTF8.self)

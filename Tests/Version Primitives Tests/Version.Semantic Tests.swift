@@ -1,14 +1,3 @@
-// ===----------------------------------------------------------------------===//
-//
-// This source file is part of the swift-version-primitives open source project
-//
-// Copyright (c) 2026 Coen ten Thije Boonkkamp and the swift-version-primitives project authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE for license information
-//
-// ===----------------------------------------------------------------------===//
-
 import Testing
 import Version_Primitives
 
@@ -21,8 +10,6 @@ extension Version.Semantic {
         @Suite struct ErrorCases {}
     }
 }
-
-// MARK: - Construction
 
 extension Version.Semantic.Test.Construction {
     @Test
@@ -75,8 +62,6 @@ extension Version.Semantic.Test.Construction {
     }
 }
 
-// MARK: - Equality
-
 extension Version.Semantic.Test.Equality {
     @Test
     func `Identical versions compare equal`() throws(Version.Semantic.Error) {
@@ -106,8 +91,6 @@ extension Version.Semantic.Test.Equality {
         #expect(a.hashValue == b.hashValue)
     }
 }
-
-// MARK: - Precedence
 
 extension Version.Semantic.Test.Precedence {
     @Test
@@ -152,9 +135,7 @@ extension Version.Semantic.Test.Precedence {
 
     @Test
     func `SemVer 2.0.0 spec precedence example`() throws(Version.Semantic.Error) {
-        // Per semver.org §11 example: 1.0.0-alpha < 1.0.0-alpha.1
-        //   < 1.0.0-alpha.beta < 1.0.0-beta < 1.0.0-beta.2
-        //   < 1.0.0-beta.11 < 1.0.0-rc.1 < 1.0.0
+
         let versions = try [
             "1.0.0-alpha",
             "1.0.0-alpha.1",
@@ -170,8 +151,6 @@ extension Version.Semantic.Test.Precedence {
         }
     }
 }
-
-// MARK: - Description
 
 extension Version.Semantic.Test.Description {
     @Test
@@ -198,8 +177,6 @@ extension Version.Semantic.Test.Description {
         #expect(v.description == "1.2.3-rc.1+build.456")
     }
 }
-
-// MARK: - Error cases
 
 extension Version.Semantic.Test.ErrorCases {
     @Test
